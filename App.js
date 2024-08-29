@@ -1,6 +1,8 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { useFonts } from "expo-font";
+import { lazy, Suspense } from "react";
+const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
 
 export default function App() {
   const [load, error] = useFonts({
@@ -14,8 +16,9 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text style={{ fontFamily: "DancingSc-Bold" }}>DogiPlay</Text>
-      <StatusBar style="auto" />
+      <Suspense fallback={<Text>Cargando...</Text>}>
+        <LoginScreen />
+      </Suspense>
     </View>
   );
 }
@@ -23,8 +26,6 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    backgroundColor: "#fbfbfb",
   },
 });
