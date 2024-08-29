@@ -1,11 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
-import { lazy, Suspense } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
+import Colors from "./Apps/Utils/Colors";
 const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
+const SplashScreen = lazy(() => import("./Apps/Screens/SplashScreen"));
 
 export default function App() {
-  const [load, error] = useFonts({
+  const [isReady, setIsReady] = useState(false);
+
+  const [fontsLoaded] = useFonts({
     DancingSc: require("./assets/fonts/DancingSc.ttf"),
     "DancingSc-Medium": require("./assets/fonts/DancingSc-Medium.ttf"),
     "DancingSc-Bold": require("./assets/fonts/DancingSc-Bold.ttf"),
@@ -14,12 +17,33 @@ export default function App() {
     "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
   });
 
+  useEffect(() => {
+    async function prepareApp() {
+      if (fontsLoaded) {
+        setTimeout(async () => {
+          setIsReady(true);
+        }, 5000);
+      }
+    }
+    prepareApp();
+  }, [fontsLoaded]);
+
   return (
-    <View style={styles.container}>
-      <Suspense fallback={<Text>Cargando...</Text>}>
-        <LoginScreen />
-      </Suspense>
-    </View>
+    <>
+      {!isReady ? (
+        <Suspense
+          fallback={<ActivityIndicator size="large" color={Colors.RED} />}
+        >
+          <SplashScreen />
+        </Suspense>
+      ) : (
+        <Suspense
+          fallback={<ActivityIndicator size="large" color={Colors.GREY} />}
+        >
+          <LoginScreen />
+        </Suspense>
+      )}
+    </>
   );
 }
 
