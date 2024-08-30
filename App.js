@@ -1,10 +1,13 @@
-import { ActivityIndicator, StyleSheet, View } from "react-native";
+import { ActivityIndicator, Text, View } from "react-native";
 import { useFonts } from "expo-font";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Colors from "./Apps/Utils/Colors";
-import { ClerkProvider } from "@clerk/clerk-expo";
-const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
+// const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
 import SplashScreen from "./Apps/Screens/SplashScreen";
+import LoginScreen from "./Apps/Screens/LoginScreen";
+import * as SecureStore from "expo-secure-store";
+import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
+import HomeScreen from "./Apps/Screens/HomeScreen";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -36,24 +39,40 @@ export default function App() {
     );
   }
 
+  const tokenCache = {
+    async getToken(key) {
+      try {
+        return await SecureStore.getItemAsync(key);
+      } catch (error) {
+        return console.log(error);
+      }
+    },
+    async saveToken(key, value) {
+      try {
+        return await SecureStore.setItemAsync(key, value);
+      } catch (error) {
+        return console.log(error);
+      }
+    },
+    async deleteToken(key) {
+      try {
+        return await SecureStore.deleteItemAsync(key);
+      } catch (error) {
+        return console.log(error);
+      }
+    },
+  };
+
   return (
-    <ClerkProvider publishableKey={publishableKey}>
-      {!isReady ? (
-        <SplashScreen />
-      ) : (
-        <Suspense
-          fallback={<ActivityIndicator size="large" color={Colors.GREY} />}
-        >
-          <LoginScreen />
-        </Suspense>
-      )}
+    <ClerkProvider
+      publishableKey={publishableKey}
+      tokenCache={tokenCache}
+      style={{ flex: 1 }}
+    >
+      <SignedIn>
+        <HomeScreen />
+      </SignedIn>
+      <SignedOut>{!isReady ? <SplashScreen /> : <LoginScreen />}</SignedOut>
     </ClerkProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fbfbfb",
-  },
-});
