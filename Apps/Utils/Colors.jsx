@@ -2,6 +2,6 @@ export default {
   BACKGROUND_TRANSPARENT: "#0000005c",
   WHITE: "#FFFFFF",
   RED: "#FF0000",
-  BLUE: "#1E2F97",
+  BLUE: "#1E2F97BF",
   GREY: "#9C9589"
 };
