@@ -2,8 +2,9 @@ import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { useFonts } from "expo-font";
 import { lazy, Suspense, useEffect, useState } from "react";
 import Colors from "./Apps/Utils/Colors";
+import { ClerkProvider } from "@clerk/clerk-expo";
 const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
-const SplashScreen = lazy(() => import("./Apps/Screens/SplashScreen"));
+import SplashScreen from "./Apps/Screens/SplashScreen";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -28,14 +29,17 @@ export default function App() {
     prepareApp();
   }, [fontsLoaded]);
 
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+  if (!publishableKey) {
+    throw new Error(
+      "Missing Publishable Key. Please set EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY in your .env"
+    );
+  }
+
   return (
-    <>
+    <ClerkProvider publishableKey={publishableKey}>
       {!isReady ? (
-        <Suspense
-          fallback={<ActivityIndicator size="large" color={Colors.RED} />}
-        >
-          <SplashScreen />
-        </Suspense>
+        <SplashScreen />
       ) : (
         <Suspense
           fallback={<ActivityIndicator size="large" color={Colors.GREY} />}
@@ -43,7 +47,7 @@ export default function App() {
           <LoginScreen />
         </Suspense>
       )}
-    </>
+    </ClerkProvider>
   );
 }
 
