@@ -1,10 +1,22 @@
-import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
-import React from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  ImageBackground,
+  TextInput,
+  Button,
+} from "react-native";
+import React, { useState } from "react";
 import Colors from "../../Utils/Colors";
 import icon from "./../../../assets/images/logo.png";
 import image from "./../../../assets/images/background.jpg";
+import google from "./../../../assets/images/google.png";
+import facebook from "./../../../assets/images/facebook.png";
+import { TouchableOpacity } from "react-native";
 
 export default function LoginScreen() {
+  const [emailAddress, setEmailAddress] = useState();
   return (
     <ImageBackground source={image} style={styles.image}>
       <View style={styles.container}>
@@ -20,8 +32,38 @@ export default function LoginScreen() {
           </View>
         </View>
         <View style={styles.secondary}>
-          <View style={styles.form}></View>
-          <View style={styles.socials}></View>
+          <View style={styles.form}>
+          <Text>Inicio de Sesión</Text>
+            <TextInput
+              style={styles.txtInput}
+              autoCapitalize="none"
+              textContentType="emailAddress"
+              // value={emailAddress}
+              placeholder="JhonDoe@gmail.com"
+              onChange={(email) => setEmailAddress(email)}
+            />
+            <TextInput
+              style={styles.txtInput}
+              // value={password}
+              placeholder="Contraseña"
+              secureTextEntry
+              onChange={(password) => setEmailAddress(password)}
+            />
+            <TouchableOpacity style={styles.btnSignIn}>
+              <Text style={styles.textSignIn}>Iniciar Sesión</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.socials}>
+            <Text>O inicia sesión con:</Text>
+            <View style={styles.buttons}>
+              <TouchableOpacity style={styles.btn}>
+                <Image source={google} style={styles.social} />
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.btn}>
+                <Image source={facebook} style={styles.social} />
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </View>
     </ImageBackground>
@@ -64,16 +106,56 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.WHITE,
     borderTopRightRadius: 45,
     borderTopLeftRadius: 45,
-    paddingHorizontal: 30
+    paddingHorizontal: 45,
   },
   form: {
+    flex: 0.7,
+    alignItems: "center",
+    justifyContent: "center",
+    gap: 16,
+  },
+  txtInput: {
+    borderColor: "grey",
     borderWidth: 1,
-    borderColor: "red",
-    flex: 0.5,
+    padding: 10,
+    paddingHorizontal: 16,
+    width: 250,
+    borderRadius: 10,
+  },
+  btnSignIn: {
+    backgroundColor: Colors.BLUE_DARK,
+    padding: 10,
+    paddingHorizontal: 10,
+    width: 250,
+    alignItems: "center",
+    borderRadius: 10,
+  },
+  textSignIn: {
+    color: Colors.WHITE,
   },
   socials: {
+    display: "flex",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flex: 0.3,
+    gap: 10,
+  },
+  buttons: {
+    display: "flex",
+    flexDirection: "row",
+    gap: 10,
+  },
+  btn: {
+    width: 70,
+    height: 50,
+    alignItems: "center",
+    justifyContent: "center",
     borderWidth: 1,
-    borderColor: "blue",
-    flex: 0.5,
+    borderColor: "lightgrey",
+    borderRadius: 10,
+  },
+  social: {
+    width: 40,
+    height: 40,
   },
 });

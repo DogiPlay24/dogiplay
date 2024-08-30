@@ -3,5 +3,6 @@ export default {
   WHITE: "#FFFFFF",
   RED: "#FF0000",
   BLUE: "#1E2F97BF",
+  BLUE_DARK: "#1E2F97",
   GREY: "#9C9589"
 };
