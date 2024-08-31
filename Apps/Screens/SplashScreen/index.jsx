@@ -1,7 +1,8 @@
-import { View, Text, StyleSheet, Image, ActivityIndicator } from "react-native";
-import React, { lazy, Suspense } from "react";
+import { View, Text, StyleSheet, Image } from "react-native";
+import React from "react";
 import Colors from "../../Utils/Colors";
 import icon from "./../../../assets/images/logo.png";
+
 export default function SplashScreen() {
   return (
     <View style={styles.background}>
