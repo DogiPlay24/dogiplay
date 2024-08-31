@@ -11,7 +11,8 @@ import { useSignUp } from "@clerk/clerk-expo";
 
 export default function SignUpForm({ handleForm }) {
   const { isLoaded, signUp, setActive } = useSignUp();
-
+  const [name, setName] = useState("");
+  const [lastname, setLastname] = useState("");
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
@@ -24,6 +25,8 @@ export default function SignUpForm({ handleForm }) {
 
     try {
       await signUp.create({
+        firstName: name,
+        lastName: lastname,
         emailAddress,
         password,
       });
@@ -60,6 +63,18 @@ export default function SignUpForm({ handleForm }) {
       <Text style={styles.titleForm}>Registrate</Text>
       {!pendingVerification && (
         <>
+          <TextInput
+            style={styles.txtInput}
+            value={name}
+            placeholder="Nombre"
+            onChangeText={setName}
+          />
+          <TextInput
+            style={styles.txtInput}
+            value={lastname}
+            placeholder="Apellido"
+            onChangeText={setLastname}
+          />
           <TextInput
             style={styles.txtInput}
             autoCapitalize="none"
