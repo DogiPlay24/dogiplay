@@ -8,6 +8,7 @@ import {
 import React, { useState } from "react";
 import Colors from "../../Utils/Colors";
 import { useSignUp } from "@clerk/clerk-expo";
+import { supabase } from "../../Utils/SupabaseConfig";
 
 export default function SignUpForm({ handleForm }) {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -50,6 +51,18 @@ export default function SignUpForm({ handleForm }) {
 
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
+        if (signUp?.emailAddress) {
+          const { data, error } = await supabase
+            .from("Users")
+            .insert([
+              {
+                name: signUp?.firstName + " " + signUp?.lastName,
+                email: signUp?.emailAddress,
+                username: (signUp?.emailAddress).split("@")[0],
+              },
+            ])
+            .select();
+        }
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
       }

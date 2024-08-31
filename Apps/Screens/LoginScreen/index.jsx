@@ -23,6 +23,7 @@ import useWarmUpBrowser from "./../../Hooks/useWarmUpBrowser";
 import { useOAuth, useSignIn } from "@clerk/clerk-expo";
 import SignInForm from "../Forms/SignInForm";
 import SignUpForm from "../Forms/SignUpForm";
+import { supabase } from "./../../Utils/SupabaseConfig";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -40,24 +41,34 @@ export default function LoginScreen() {
     strategy: "oauth_facebook",
   });
 
+  const handleOAuthLogin = useCallback(
+    async (startOAuthFlow) => {
+      try {
+        const { createdSessionId, signUp } = await startOAuthFlow();
+        if (createdSessionId) {
+          setActive({ session: createdSessionId });
+          if (signUp?.emailAddress) {
+            const { data, error } = await supabase
+              .from("Users")
+              .insert([
+                {
+                  name: signUp?.firstName + " " + signUp?.lastName,
+                  email: signUp?.emailAddress,
+                  username: (signUp?.emailAddress).split("@")[0],
+                },
+              ])
+              .select();
+          }
+        }
+      } catch (error) {
+        console.log("OAuth error", error);
+      }
+    },
+    [setActive]
+  );
 
-  const handleGoogleLogin = useCallback(async () => {
-    try {
-      const { createdSessionId } = await startGoogleOAuthFlow();
-      if (createdSessionId) setActive({ session: createdSessionId });
-    } catch (error) {
-      console.log("OAuth error", error);
-    }
-  }, [startGoogleOAuthFlow, setActive]);
-
-  const handleFacebookLogin = useCallback(async () => {
-    try {
-      const { createdSessionId } = await startFacebookOAuthFlow();
-      if (createdSessionId) setActive({ session: createdSessionId });
-    } catch (error) {
-      console.log("OAuth error", error);
-    }
-  }, [startFacebookOAuthFlow, setActive]);
+  const handleGoogleLogin = () => handleOAuthLogin(startGoogleOAuthFlow);
+  const handleFacebookLogin = () => handleOAuthLogin(startFacebookOAuthFlow);
 
   const handleForm = () => {
     setIsLogin(!isLogin);
@@ -87,7 +98,11 @@ export default function LoginScreen() {
               </View>
             </View>
             <View style={styles.secondary}>
-              {isLogin ? <SignInForm handleForm={handleForm} /> : <SignUpForm handleForm={handleForm} />}
+              {isLogin ? (
+                <SignInForm handleForm={handleForm} />
+              ) : (
+                <SignUpForm handleForm={handleForm} />
+              )}
               <View style={styles.socials}>
                 <Text style={styles.titleSocials}>O inicia sesión con:</Text>
                 <View style={styles.buttons}>
