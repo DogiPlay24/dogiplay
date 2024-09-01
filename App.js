@@ -4,33 +4,21 @@ import { lazy, Suspense, useEffect, useState } from "react";
 import Colors from "./Apps/Utils/Colors";
 // const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
 import SplashScreen from "./Apps/Screens/SplashScreen";
+import FONTS from './assets/fonts';
 import LoginScreen from "./Apps/Screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer } from "@react-navigation/native";
 import TabNavigation from "./Apps/Navigations/TabNavigation";
 
+
 export default function App() {
   const [isReady, setIsReady] = useState(false);
 
-  const [fontsLoaded] = useFonts({
-    DancingSc: require("./assets/fonts/DancingSc.ttf"),
-    "DancingSc-Medium": require("./assets/fonts/DancingSc-Medium.ttf"),
-    "DancingSc-Bold": require("./assets/fonts/DancingSc-Bold.ttf"),
-    Roboto: require("./assets/fonts/Roboto-Regular.ttf"),
-    "Roboto-Medium": require("./assets/fonts/Roboto-Medium.ttf"),
-    "Roboto-Bold": require("./assets/fonts/Roboto-Bold.ttf"),
-  });
+  const [fontsLoaded] = useFonts(FONTS);
 
   useEffect(() => {
-    async function prepareApp() {
-      if (fontsLoaded) {
-        setTimeout(async () => {
-          setIsReady(true);
-        }, 5000);
-      }
-    }
-    prepareApp();
+    fontsLoaded && setTimeout(async () => setIsReady(true) , 5000);
   }, [fontsLoaded]);
 
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
