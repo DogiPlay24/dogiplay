@@ -7,7 +7,8 @@ import SplashScreen from "./Apps/Screens/SplashScreen";
 import LoginScreen from "./Apps/Screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
-import HomeScreen from "./Apps/Screens/HomeScreen";
+import { NavigationContainer } from "@react-navigation/native";
+import TabNavigation from "./Apps/Navigations/TabNavigation";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -70,7 +71,9 @@ export default function App() {
       style={{ flex: 1 }}
     >
       <SignedIn>
-        <HomeScreen />
+        <NavigationContainer>
+          <TabNavigation />
+        </NavigationContainer>
       </SignedIn>
       <SignedOut>{!isReady ? <SplashScreen /> : <LoginScreen />}</SignedOut>
     </ClerkProvider>
