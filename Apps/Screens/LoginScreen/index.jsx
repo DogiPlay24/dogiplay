@@ -4,7 +4,6 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
-  TextInput,
   KeyboardAvoidingView,
   Platform,
   TouchableOpacity,
@@ -16,8 +15,8 @@ import React, { useCallback, useState } from "react";
 import Colors from "../../Utils/Colors";
 import icon from "./../../../assets/images/logo.png";
 import image from "./../../../assets/images/background.jpg";
-import google from "./../../../assets/images/google.png";
-import facebook from "./../../../assets/images/facebook.png";
+import google from "./../../../assets/icons/google.png";
+import facebook from "./../../../assets/icons/facebook.png";
 import * as WebBrowser from "expo-web-browser";
 import useWarmUpBrowser from "./../../Hooks/useWarmUpBrowser";
 import { useOAuth, useSignIn } from "@clerk/clerk-expo";
