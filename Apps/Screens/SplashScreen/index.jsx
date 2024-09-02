@@ -8,10 +8,8 @@ export default function SplashScreen() {
     <View style={styles.background}>
       <View>
         <Text style={styles.title}>
-          Dogg
-          <Text style={styles.span}>y</Text>
-          Pla
-          <Text style={styles.span}>y</Text>
+          Dogi
+          <Text style={styles.span}>Play</Text>
         </Text>
         <Text style={styles.subtitle}>Las estrellas del deporte</Text>
       </View>
@@ -24,7 +22,7 @@ export default function SplashScreen() {
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: Colors.BLUE,
+    backgroundColor: Colors.BLUE_GRADIENT,
     display: "flex",
     alignItems: "center",
     justifyContent: "space-around",
@@ -32,17 +30,20 @@ const styles = StyleSheet.create({
     gap: 4,
   },
   title: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "BigshotOne",
     color: Colors.WHITE,
-    fontSize: 36,
-  },
-  subtitle: {
-    fontFamily: "Roboto-Bold",
-    color: Colors.GREY,
-    fontSize: 16,
+    fontSize: 48,
+    margin: 12
   },
   span: {
-    color: Colors.GREY,
+    opacity: 0.3
+  },
+  subtitle: {
+    fontFamily: "Roboto",
+    opacity: 0.3,
+    fontSize: 16,
+    color: Colors.WHITE,
+    textAlign:'center'
   },
   image: {
     alignItems: "center",
