@@ -84,6 +84,7 @@ export default function LoginScreen() {
           <ScrollView
             contentContainerStyle={styles.scrollContainer}
             keyboardShouldPersistTaps="handled"
+            bounces={false}
           >
             <View style={styles.main}>
               <Image source={icon} style={styles.icon} />
