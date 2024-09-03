@@ -6,7 +6,6 @@ export default function ProfileScreen() {
   const { signOut } = useAuth();
   return (
     <View style={{ padding: 50 }}>
-      <Text>HomeScreen</Text>
       <Button title="Cerrar sesión" onPress={signOut} />
     </View>
   );

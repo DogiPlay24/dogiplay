@@ -1,8 +1,5 @@
-import { ActivityIndicator, Text, View } from "react-native";
 import { useFonts } from "expo-font";
-import { lazy, Suspense, useEffect, useState } from "react";
-import Colors from "./Apps/Utils/Colors";
-// const LoginScreen = lazy(() => import("./Apps/Screens/LoginScreen"));
+import { useEffect, useState } from "react";
 import SplashScreen from "./Apps/Screens/SplashScreen";
 import FONTS from './assets/fonts';
 import LoginScreen from "./Apps/Screens/LoginScreen";
