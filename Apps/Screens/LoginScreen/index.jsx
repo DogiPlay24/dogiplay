@@ -23,12 +23,15 @@ import { useOAuth, useSignIn } from "@clerk/clerk-expo";
 import SignInForm from "../Forms/SignInForm";
 import SignUpForm from "../Forms/SignUpForm";
 import { supabase } from "./../../Utils/SupabaseConfig";
+import { useTranslation } from "react-i18next";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const { setActive } = useSignIn();
+  const loginScreen = t("loginScreen", { returnObjects: true });
 
   useWarmUpBrowser();
   // Google OAuth
@@ -104,7 +107,7 @@ export default function LoginScreen() {
                 <SignUpForm handleForm={handleForm} />
               )}
               <View style={styles.socials}>
-                <Text style={styles.titleSocials}>O inicia sesión con:</Text>
+                <Text style={styles.titleSocials}>{loginScreen.login}</Text>
                 <View style={styles.buttons}>
                   <TouchableOpacity
                     onPress={handleGoogleLogin}

@@ -1,0 +1,26 @@
+{
+    "signInForm": {
+        "welcome": "Bienvenido",
+        "password": "Contraseña",
+        "login": "Iniciar sesión",
+        "account": "¿No tienes una cuenta?",
+        "register": "Registrarse"
+    },
+    "signUpForm": {
+        "register": "Registro",
+        "name": "Nombre",
+        "lastname": "Apellido",
+        "password": "Contraseña",
+        "sign": "Registrar",
+        "account": "¿Ya tienes una cuenta?",
+        "login": "Inicia sesión",
+        "code": "Código",
+        "verify": "Verificar"
+    },
+    "loginScreen": {
+        "login": "O inicia sesión con:"
+    },
+    "profileScreen": {
+        "logout": "Cerrar Sesión"
+    }
+}

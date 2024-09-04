@@ -9,8 +9,11 @@ import React, { useState } from "react";
 import Colors from "../../Utils/Colors";
 import { useSignUp } from "@clerk/clerk-expo";
 import { supabase } from "../../Utils/SupabaseConfig";
+import { useTranslation } from "react-i18next";
+import i18next from "./../../Utils/i18next";
 
 export default function SignUpForm({ handleForm }) {
+  const { t } = useTranslation();
   const { isLoaded, signUp, setActive } = useSignUp();
   const [name, setName] = useState("");
   const [lastname, setLastname] = useState("");
@@ -18,6 +21,7 @@ export default function SignUpForm({ handleForm }) {
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
+  const signUpForm = t("signUpForm", { returnObjects: true });
 
   const handleEmailRegister = async () => {
     if (!isLoaded) {
@@ -73,19 +77,19 @@ export default function SignUpForm({ handleForm }) {
 
   return (
     <View style={styles.form}>
-      <Text style={styles.titleForm}>Registrate</Text>
+      <Text style={styles.titleForm}>{signUpForm.register}</Text>
       {!pendingVerification && (
         <>
           <TextInput
             style={styles.txtInput}
             value={name}
-            placeholder="Nombre"
+            placeholder={signUpForm.name}
             onChangeText={setName}
           />
           <TextInput
             style={styles.txtInput}
             value={lastname}
-            placeholder="Apellido"
+            placeholder={signUpForm.lastname}
             onChangeText={setLastname}
           />
           <TextInput
@@ -100,7 +104,7 @@ export default function SignUpForm({ handleForm }) {
           <TextInput
             style={styles.txtInput}
             value={password}
-            placeholder="Contraseña"
+            placeholder={signUpForm.password}
             secureTextEntry
             onChangeText={setPassword}
           />
@@ -108,30 +112,30 @@ export default function SignUpForm({ handleForm }) {
             onPress={handleEmailRegister}
             style={styles.btnSignIn}
           >
-            <Text style={styles.textSignIn}>Registrar</Text>
+            <Text style={styles.textSignIn}>{signUpForm.sign}</Text>
           </TouchableOpacity>
           <View style={styles.buttons}>
-            <Text style={styles.register}>¿Ya tienes una cuenta?</Text>
+            <Text style={styles.register}>{signUpForm.account}</Text>
             <TouchableOpacity onPress={handleForm}>
               <Text style={[styles.titleSocials, styles.registerText]}>
-                Inicia Sesión
+                {signUpForm.login}
               </Text>
             </TouchableOpacity>
           </View>
         </>
       )}
-      {pendingVerification && (
+      {!pendingVerification && (
         <>
           <TextInput
             style={styles.txtInput}
             textContentType="oneTimeCode"
             keyboardType="number-pad"
             value={code}
-            placeholder="codigo"
+            placeholder={signUpForm.code}
             onChangeText={(code) => setCode(code)}
           />
           <TouchableOpacity onPress={handleVerify} style={styles.btnSignIn}>
-            <Text style={styles.textSignIn}>Verificar</Text>
+            <Text style={styles.textSignIn}>{signUpForm.verify}</Text>
           </TouchableOpacity>
         </>
       )}

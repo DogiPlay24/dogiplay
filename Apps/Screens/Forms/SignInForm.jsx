@@ -8,12 +8,16 @@ import {
 import React, { useCallback, useState } from "react";
 import Colors from "../../Utils/Colors";
 import { useSignIn } from "@clerk/clerk-expo";
+import { useTranslation } from "react-i18next";
+import i18next from "./../../Utils/i18next";
 
 export default function SignInForm({ handleForm }) {
+  const { t } = useTranslation();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
   // Email SignIn
   const { signIn, setActive, isLoaded } = useSignIn();
+  const signInForm = t("signInForm", { returnObjects: true });
 
   const handleEmailLogin = useCallback(async () => {
     if (!isLoaded) return;
@@ -36,7 +40,7 @@ export default function SignInForm({ handleForm }) {
 
   return (
     <View style={styles.form}>
-      <Text style={styles.titleForm}>Introduce tu correo</Text>
+      <Text style={styles.titleForm}>{signInForm.welcome}</Text>
       <TextInput
         style={styles.txtInput}
         autoCapitalize="none"
@@ -49,18 +53,18 @@ export default function SignInForm({ handleForm }) {
       <TextInput
         style={styles.txtInput}
         value={password}
-        placeholder="Contraseña"
+        placeholder={signInForm.password}
         secureTextEntry
         onChangeText={setPassword}
       />
       <TouchableOpacity onPress={handleEmailLogin} style={styles.btnSignIn}>
-        <Text style={styles.textSignIn}>Iniciar Sesión</Text>
+        <Text style={styles.textSignIn}>{signInForm.login}</Text>
       </TouchableOpacity>
       <View style={styles.buttons}>
-        <Text style={styles.register}>¿No tienes una cuenta?</Text>
+        <Text style={styles.register}>{signInForm.account}</Text>
         <TouchableOpacity onPress={handleForm}>
           <Text style={[styles.titleSocials, styles.registerText]}>
-            Regístrate
+          {signInForm.register}
           </Text>
         </TouchableOpacity>
       </View>

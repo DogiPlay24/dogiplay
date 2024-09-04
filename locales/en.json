@@ -1,0 +1,26 @@
+{
+    "signInForm": {
+        "welcome": "Welcome",
+        "password": "Password",
+        "login": "Login",
+        "account": "Don't you have an account?",
+        "register": "Register"
+    },
+    "signUpForm": {
+        "register": "Register",
+        "name": "Name",
+        "lastname": "Lastname",
+        "password": "Password",
+        "sign": "Register",
+        "account": "Already have an account?",
+        "login": "Login",
+        "code": "Code",
+        "verify": "Verify"
+    },
+    "loginScreen": {
+        "login": "Or log in with:"
+    },
+    "profileScreen": {
+        "logout": "Logout"
+    }
+}
