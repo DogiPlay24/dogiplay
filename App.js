@@ -7,6 +7,7 @@ import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer } from "@react-navigation/native";
 import TabNavigation from "./Apps/Navigations/TabNavigation";
+import Toast from "react-native-toast-message";
 
 
 export default function App() {
@@ -54,13 +55,14 @@ export default function App() {
       publishableKey={publishableKey}
       tokenCache={tokenCache}
       style={{ flex: 1 }}
-    >
+      >
       <SignedIn>
         <NavigationContainer>
           <TabNavigation />
         </NavigationContainer>
       </SignedIn>
       <SignedOut>{!isReady ? <SplashScreen /> : <LoginScreen />}</SignedOut>
+      <Toast position="bottom" />
     </ClerkProvider>
   );
 }

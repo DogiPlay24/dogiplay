@@ -15,7 +15,8 @@
         "account": "¿Ya tienes una cuenta?",
         "login": "Inicia sesión",
         "code": "Código",
-        "verify": "Verificar"
+        "verify": "Verificar",
+        "error": "Error"
     },
     "loginScreen": {
         "login": "O inicia sesión con:"

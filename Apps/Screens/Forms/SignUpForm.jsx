@@ -4,13 +4,15 @@ import {
   StyleSheet,
   TouchableOpacity,
   TextInput,
+  Alert,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState } from "react";
 import Colors from "../../Utils/Colors";
 import { useSignUp } from "@clerk/clerk-expo";
 import { supabase } from "../../Utils/SupabaseConfig";
 import { useTranslation } from "react-i18next";
-import i18next from "./../../Utils/i18next";
+import Toast from "react-native-toast-message";
 
 export default function SignUpForm({ handleForm }) {
   const { t } = useTranslation();
@@ -21,12 +23,63 @@ export default function SignUpForm({ handleForm }) {
   const [password, setPassword] = useState("");
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
   const signUpForm = t("signUpForm", { returnObjects: true });
+  const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const handleEmailRegister = async () => {
-    if (!isLoaded) {
+  const validateInputs = async () => {
+    const userExists = await checkUser(emailAddress);
+
+    if (!name || !lastname || !emailAddress || !password) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "Completa todos los campos, por favor",
+      });
       return;
     }
+    if (userExists) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "El correo electrónico ya está registrado.",
+      });
+      return;
+    }
+    if (!emailPattern.test(emailAddress)) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "Por favor ingresa un correo electrónico válido",
+      });
+      return;
+    }
+    if (password.length < 8) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "La contraseña debe tener al menos 8 caracteres",
+      });
+      return false;
+    }
+  };
+
+  const checkUser = async (email) => {
+    const { data, error } = await supabase
+      .from("Users")
+      .select("*")
+      .eq("email", email);
+
+    if (error) {
+      console.error("Error al verificar el usuario", error);
+      return false;
+    }
+
+    return data.length > 0;
+  };
+
+  const handleEmailRegister = async () => {
+    if (!isLoaded || !validateInputs()) return;
 
     try {
       await signUp.create({
@@ -39,14 +92,17 @@ export default function SignUpForm({ handleForm }) {
       await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
       setPendingVerification(true);
     } catch (error) {
-      console.error(JSON.stringify(error, null, 2));
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "El correo electrónico ya está registrado.",
+      });
     }
   };
 
   const handleVerify = async () => {
-    if (!isLoaded) {
-      return;
-    }
+    if (!isLoaded) return;
+    setIsVerifying(true);
 
     try {
       const completeSignUp = await signUp.attemptEmailAddressVerification({
@@ -69,9 +125,19 @@ export default function SignUpForm({ handleForm }) {
         }
       } else {
         console.error(JSON.stringify(completeSignUp, null, 2));
+        Toast.show({
+          type: "error",
+          text1: "❌ Error",
+          text2: "No se logró crear el usuario. Inténtalo más tarde.",
+        });
       }
     } catch (error) {
-      console.error(JSON.stringify(err, null, 2));
+      console.error(JSON.stringify(error, null, 2));
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "El código es incorrecto. Inténtalo de nuevo.",
+      });
     }
   };
 
@@ -124,7 +190,7 @@ export default function SignUpForm({ handleForm }) {
           </View>
         </>
       )}
-      {!pendingVerification && (
+      {pendingVerification && (
         <>
           <TextInput
             style={styles.txtInput}
@@ -135,7 +201,13 @@ export default function SignUpForm({ handleForm }) {
             onChangeText={(code) => setCode(code)}
           />
           <TouchableOpacity onPress={handleVerify} style={styles.btnSignIn}>
-            <Text style={styles.textSignIn}>{signUpForm.verify}</Text>
+            <Text style={styles.textSignIn}>
+              {!isVerifying ? (
+                signUpForm.verify
+              ) : (
+                <ActivityIndicator size="small" color={Colors.WHITE} />
+              )}
+            </Text>
           </TouchableOpacity>
         </>
       )}

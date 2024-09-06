@@ -9,7 +9,7 @@ import React, { useCallback, useState } from "react";
 import Colors from "../../Utils/Colors";
 import { useSignIn } from "@clerk/clerk-expo";
 import { useTranslation } from "react-i18next";
-import i18next from "./../../Utils/i18next";
+import Toast from "react-native-toast-message";
 
 export default function SignInForm({ handleForm }) {
   const { t } = useTranslation();
@@ -21,6 +21,14 @@ export default function SignInForm({ handleForm }) {
 
   const handleEmailLogin = useCallback(async () => {
     if (!isLoaded) return;
+    if (!emailAddress || !password) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "Completa todos los campos, por favor",
+      });
+      return;
+    }
 
     try {
       const signInAttempt = await signIn.create({
@@ -31,10 +39,20 @@ export default function SignInForm({ handleForm }) {
       if (signInAttempt.status === "complete") {
         await setActive({ session: signInAttempt.createdSessionId });
       } else {
-        console.error(JSON.stringify(signInAttempt, null, 2));
+        // console.error(JSON.stringify(signInAttempt, null, 2));
+        Toast.show({
+          type: "error",
+          text1: "❌ Error",
+          text2: "Error al iniciar sesión. Intente nuevamente.",
+        });
       }
     } catch (error) {
-      console.error(JSON.stringify(error, null, 2));
+      // console.error(JSON.stringify(error, null, 2));
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "Usuario y/o contraseña incorrectos",
+      });
     }
   }, [isLoaded, emailAddress, password, signIn, setActive]);
 
@@ -64,7 +82,7 @@ export default function SignInForm({ handleForm }) {
         <Text style={styles.register}>{signInForm.account}</Text>
         <TouchableOpacity onPress={handleForm}>
           <Text style={[styles.titleSocials, styles.registerText]}>
-          {signInForm.register}
+            {signInForm.register}
           </Text>
         </TouchableOpacity>
       </View>
