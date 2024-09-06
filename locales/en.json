@@ -15,7 +15,8 @@
         "account": "Already have an account?",
         "login": "Login",
         "code": "Code",
-        "verify": "Verify"
+        "verify": "Verify",
+        "error": "Error"
     },
     "loginScreen": {
         "login": "Or log in with:"

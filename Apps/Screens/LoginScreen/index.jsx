@@ -24,6 +24,7 @@ import SignInForm from "../Forms/SignInForm";
 import SignUpForm from "../Forms/SignUpForm";
 import { supabase } from "./../../Utils/SupabaseConfig";
 import { useTranslation } from "react-i18next";
+import Toast from "react-native-toast-message";
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -63,7 +64,12 @@ export default function LoginScreen() {
           }
         }
       } catch (error) {
-        console.log("OAuth error", error);
+        // console.log("OAuth error", error);
+        Toast.show({
+          type: "error",
+          text1: "❌ Error de autenticación",
+          text2: "Error al iniciar sesión, Intentalo más tarde",
+        });
       }
     },
     [setActive]
