@@ -4,7 +4,10 @@
         "password": "Password",
         "login": "Login",
         "account": "Don't you have an account?",
-        "register": "Register"
+        "register": "Register",
+        "allInputs": "Please complete all fields",
+        "errorLogin": "Error logging in. Please try again.",
+        "errorUser": "Incorrect user name and/or password"
     },
     "signUpForm": {
         "register": "Register",
@@ -16,7 +19,10 @@
         "login": "Login",
         "code": "Code",
         "verify": "Verify",
-        "error": "Error"
+        "allInputs": "Please complete all fields",
+        "emailIsAlready": "The e-mail address is already registered.",
+        "emailPattern": "Please enter a valid email address",
+        "passwordLength": "The password must be at least 8 characters long"
     },
     "loginScreen": {
         "login": "Or log in with:"
