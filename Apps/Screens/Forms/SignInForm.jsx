@@ -25,7 +25,7 @@ export default function SignInForm({ handleForm }) {
       Toast.show({
         type: "error",
         text1: "❌ Error",
-        text2: "Completa todos los campos, por favor",
+        text2: `${signInForm.allInputs}`,
       });
       return;
     }
@@ -43,7 +43,7 @@ export default function SignInForm({ handleForm }) {
         Toast.show({
           type: "error",
           text1: "❌ Error",
-          text2: "Error al iniciar sesión. Intente nuevamente.",
+          text2: `${signInForm.errorLogin}`,
         });
       }
     } catch (error) {
@@ -51,7 +51,7 @@ export default function SignInForm({ handleForm }) {
       Toast.show({
         type: "error",
         text1: "❌ Error",
-        text2: "Usuario y/o contraseña incorrectos",
+        text2: `${signInForm.errorUser}`,
       });
     }
   }, [isLoaded, emailAddress, password, signIn, setActive]);

@@ -4,7 +4,10 @@
         "password": "Contraseña",
         "login": "Iniciar sesión",
         "account": "¿No tienes una cuenta?",
-        "register": "Registrarse"
+        "register": "Registrarse",
+        "allInputs": "Completa todos los campos, por favor",
+        "errorLogin": "Error al iniciar sesión. Intente nuevamente.",
+        "errorUser": "Usuario y/o contraseña incorrectos"
     },
     "signUpForm": {
         "register": "Registro",
@@ -16,7 +19,10 @@
         "login": "Inicia sesión",
         "code": "Código",
         "verify": "Verificar",
-        "error": "Error"
+        "allInputs": "Completa todos los campos, por favor",
+        "emailIsAlready": "El correo electrónico ya está registrado.",
+        "emailPattern": "Por favor ingresa un correo electrónico válido",
+        "passwordLength": "La contraseña debe tener al menos 8 caracteres"
     },
     "loginScreen": {
         "login": "O inicia sesión con:"

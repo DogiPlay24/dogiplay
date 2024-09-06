@@ -34,7 +34,7 @@ export default function SignUpForm({ handleForm }) {
       Toast.show({
         type: "error",
         text1: "❌ Error",
-        text2: "Completa todos los campos, por favor",
+        text2: `${signUpForm.allInputs}`,
       });
       return;
     }
