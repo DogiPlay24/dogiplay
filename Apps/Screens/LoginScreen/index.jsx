@@ -25,12 +25,14 @@ import SignUpForm from "../Forms/SignUpForm";
 import { supabase } from "./../../Utils/SupabaseConfig";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
+import PasswordReset from "../Forms/PasswordReset";
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen() {
   const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
+  const [isPasswordReset, setIsPasswordReset] = useState(false);
   const { setActive } = useSignIn();
   const loginScreen = t("loginScreen", { returnObjects: true });
 
@@ -82,6 +84,14 @@ export default function LoginScreen() {
     setIsLogin(!isLogin);
   };
 
+  const showPasswordResetForm = () => {
+    setIsPasswordReset(true);
+  };
+
+  const handleBack = () => {
+    setIsPasswordReset(false);
+  };
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <ImageBackground source={image} style={styles.image}>
@@ -107,8 +117,13 @@ export default function LoginScreen() {
               </View>
             </View>
             <View style={styles.secondary}>
-              {isLogin ? (
-                <SignInForm handleForm={handleForm} />
+              {isPasswordReset ? (
+                <PasswordReset onBack={handleBack} />
+              ) : isLogin ? (
+                <SignInForm
+                  handleForm={handleForm}
+                  showPasswordForm={showPasswordResetForm}
+                />
               ) : (
                 <SignUpForm handleForm={handleForm} />
               )}
