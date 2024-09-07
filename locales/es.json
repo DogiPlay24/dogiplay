@@ -13,7 +13,7 @@
     "passwordReset": {
         "passwordReset": "Restablecer contraseña",
         "email": "Ingrese su correo electrónico",
-        "code": "Enviar código",
+        "sendCode": "Enviar código",
         "verificationCode": "Código de verificación",
         "newPassword": "Nueva contraseña"
     },
