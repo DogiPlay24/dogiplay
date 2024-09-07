@@ -11,7 +11,7 @@ import { useSignIn } from "@clerk/clerk-expo";
 import { useTranslation } from "react-i18next";
 import Toast from "react-native-toast-message";
 
-export default function SignInForm({ handleForm }) {
+export default function SignInForm({ handleForm, showPasswordForm }) {
   const { t } = useTranslation();
   const [emailAddress, setEmailAddress] = useState("");
   const [password, setPassword] = useState("");
@@ -86,6 +86,11 @@ export default function SignInForm({ handleForm }) {
           </Text>
         </TouchableOpacity>
       </View>
+      <TouchableOpacity onPress={showPasswordForm}>
+        <Text style={[styles.titleSocials, styles.registerText]}>
+          {signInForm.forgotPassword}
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }

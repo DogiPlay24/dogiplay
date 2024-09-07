@@ -5,9 +5,17 @@
         "login": "Iniciar sesión",
         "account": "¿No tienes una cuenta?",
         "register": "Registrarse",
+        "forgotPassword": "¿Olvidó su contraseña?",
         "allInputs": "Completa todos los campos, por favor",
         "errorLogin": "Error al iniciar sesión. Intente nuevamente.",
         "errorUser": "Usuario y/o contraseña incorrectos"
+    },
+    "passwordReset": {
+        "passwordReset": "Restablecer contraseña",
+        "email": "Ingrese su correo electrónico",
+        "code": "Enviar código",
+        "verificationCode": "Código de verificación",
+        "newPassword": "Nueva contraseña"
     },
     "signUpForm": {
         "register": "Registro",

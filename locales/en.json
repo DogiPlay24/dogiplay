@@ -5,9 +5,17 @@
         "login": "Login",
         "account": "Don't you have an account?",
         "register": "Register",
+        "forgotPassword": "Forgot password?",
         "allInputs": "Please complete all fields",
         "errorLogin": "Error logging in. Please try again.",
         "errorUser": "Incorrect user name and/or password"
+    },
+    "passwordReset": {
+        "passwordReset": "Password Reset",
+        "email": "Enter your email address",
+        "sendCode": "Send code",
+        "verificationCode": "Verification code",
+        "newPassword": "New password"
     },
     "signUpForm": {
         "register": "Register",
