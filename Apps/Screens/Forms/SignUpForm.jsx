@@ -222,7 +222,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   titleForm: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Poppins-Regular",
     color: Colors.GREY,
     fontSize: 24,
   },
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   register: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Poppins-Regular",
     color: Colors.GREY,
     fontSize: 14,
   },

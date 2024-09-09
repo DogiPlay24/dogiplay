@@ -11,12 +11,10 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Colors from "../../Utils/Colors";
-import icon from "./../../../assets/images/logo.png";
-import image from "./../../../assets/images/background.jpg";
-import google from "./../../../assets/icons/google.png";
-import facebook from "./../../../assets/icons/facebook.png";
+import { images, getBackground } from "./../../../assets/images/index";
+import { icons } from "./../../../assets/icons/index";
 import * as WebBrowser from "expo-web-browser";
 import useWarmUpBrowser from "./../../Hooks/useWarmUpBrowser";
 import { useOAuth, useSignIn } from "@clerk/clerk-expo";
@@ -94,7 +92,7 @@ export default function LoginScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ImageBackground source={image} style={styles.image}>
+      <ImageBackground source={getBackground()} style={styles.image}>
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -106,13 +104,11 @@ export default function LoginScreen() {
             bounces={false}
           >
             <View style={styles.main}>
-              <Image source={icon} style={styles.icon} />
+              <Image source={images.logo} style={styles.icon} />
               <View>
                 <Text style={styles.title}>
-                  Dogg
-                  <Text style={styles.span}>y</Text>
-                  Pla
-                  <Text style={styles.span}>y</Text>
+                  Dogi
+                  <Text style={styles.span}>Play</Text>
                 </Text>
               </View>
             </View>
@@ -134,13 +130,13 @@ export default function LoginScreen() {
                     onPress={handleGoogleLogin}
                     style={styles.btn}
                   >
-                    <Image source={google} style={styles.social} />
+                    <Image source={icons.google} style={styles.social} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={handleFacebookLogin}
                     style={styles.btn}
                   >
-                    <Image source={facebook} style={styles.social} />
+                    <Image source={icons.facebook} style={styles.social} />
                   </TouchableOpacity>
                 </View>
               </View>
@@ -178,12 +174,12 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
   },
   title: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "BigshotOne",
     color: Colors.WHITE,
     fontSize: 36,
   },
   span: {
-    color: Colors.GREY,
+    color: Colors.LIGHT_BLUE
   },
   secondary: {
     backgroundColor: Colors.WHITE,
@@ -198,7 +194,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   titleSocials: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Poppins-Regular",
     color: Colors.GREY,
     fontSize: 14,
   },

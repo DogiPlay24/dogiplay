@@ -5,4 +5,6 @@ export default {
     Roboto: require("./Roboto-Regular.ttf"),
     "Roboto-Medium": require("./Roboto-Medium.ttf"),
     "Roboto-Bold": require("./Roboto-Bold.ttf"),
+    BigshotOne: require("./BigshotOne-Regular.ttf"),
+    "Poppins-Regular": require("./Poppins-Regular.ttf")
 }
