@@ -11,9 +11,9 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from "react-native";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useMemo, useState } from "react";
 import Colors from "../../Utils/Colors";
-import { images } from "./../../../assets/images/index";
+import { images, getBackground } from "./../../../assets/images/index";
 import { icons } from "./../../../assets/icons/index";
 import * as WebBrowser from "expo-web-browser";
 import useWarmUpBrowser from "./../../Hooks/useWarmUpBrowser";
@@ -92,7 +92,7 @@ export default function LoginScreen() {
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <ImageBackground source={images.backgroundImage} style={styles.image}>
+      <ImageBackground source={getBackground()} style={styles.image}>
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
     fontSize: 36,
   },
   span: {
-    opacity:0.5
+    color: Colors.LIGHT_BLUE
   },
   secondary: {
     backgroundColor: Colors.WHITE,
@@ -194,7 +194,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   titleSocials: {
-    fontFamily: "Roboto-Bold",
+    fontFamily: "Poppins-Regular",
     color: Colors.GREY,
     fontSize: 14,
   },

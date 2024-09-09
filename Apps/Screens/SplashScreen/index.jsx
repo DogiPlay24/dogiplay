@@ -1,57 +1,58 @@
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 import React from "react";
 import Colors from "../../Utils/Colors";
-import icon from "./../../../assets/images/logo.png";
+import { images } from "./../../../assets/images";
 
 export default function SplashScreen() {
   return (
     <View style={styles.background}>
-      <View>
-        <Text style={styles.title}>
-          Dogi
-          <Text style={styles.span}>Play</Text>
-        </Text>
-        <Text style={styles.subtitle}>Las estrellas del deporte</Text>
-      </View>
-      <View style={styles.image}>
-        <Image source={icon} style={styles.icon} />
-      </View>
+      <ImageBackground source={images.pattern} resizeMode="cover" style={styles.bg}>
+        <View>
+          <Text style={styles.title}>
+            Dogi
+            <Text style={styles.span}>Play</Text>
+          </Text>
+          <Text style={styles.subtitle}>Las estrellas del deporte</Text>
+        </View>
+        <View style={styles.image}>
+          <Image source={images.logo} style={styles.icon} />
+        </View>
+      </ImageBackground>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: Colors.BLUE_GRADIENT,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-around",
     flex: 1,
-    gap: 4,
+  },
+  bg: {
+    flex: 1,
+    justifyContent: 'center',
   },
   title: {
     fontFamily: "BigshotOne",
     color: Colors.WHITE,
-    fontSize: 48,
-    margin: 12
+    fontSize: 52,
+    margin: 12,
+    textAlign: 'center'
   },
   span: {
-    opacity: 0.3
+    color: Colors.LIGHT_BLUE,
   },
   subtitle: {
-    fontFamily: "Roboto",
+    fontFamily: "Poppins-Regular",
     opacity: 0.3,
-    fontSize: 16,
+    fontSize: 18,
     color: Colors.WHITE,
-    textAlign:'center'
+    textAlign: 'center'
   },
   image: {
     alignItems: "center",
-    paddingTop: 14,
+    paddingTop: 200
   },
   icon: {
-    width: 100,
-    height: 100,
+    height: 200,
     resizeMode: "contain",
   },
 });
