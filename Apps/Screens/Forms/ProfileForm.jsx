@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../Utils/SupabaseConfig";
 import { useUser } from "@clerk/clerk-expo";
-import RNPickerSelect from 'react-native-picker-select';
+import RNPickerSelect from "react-native-picker-select";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Colors from "../../Utils/Colors";
 import Toast from "react-native-toast-message";
@@ -33,14 +33,13 @@ export default function Profile() {
   const [date, setDate] = useState(new Date());
   const [sport, setSport] = useState("");
   const [club, setClub] = useState("");
-  const [completed, setCompleted] = useState(false);
   const [showPicker, setShowPicker] = useState(false);
   const [dataSports, setDataSports] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedMunicipality, setSelectedMunicipality] = useState("");
 
-  const bg = useMemo(()=> getBackground(),[])
+  const bg = useMemo(() => getBackground(), [])
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
@@ -147,9 +146,8 @@ export default function Profile() {
       setSelectedState(data.state || "");
       setSelectedMunicipality(data.municipality || "");
       setClub(data.club || "");
-      setCompleted(data.completed);
 
-      if (completed) {
+      if (data.completed) {
         navigation.navigate("TabNavigation");
       }
     }
@@ -227,9 +225,9 @@ export default function Profile() {
 
   const stateOptions = selectedCountryData
     ? selectedCountryData.states.map((state) => ({
-        label: state.name,
-        value: state.name,
-      }))
+      label: state.name,
+      value: state.name,
+    }))
     : [];
 
   const selectedStateData = selectedCountryData
@@ -250,11 +248,11 @@ export default function Profile() {
     { label: 'Personalizado', value: 'P' },
   ]
 
-  const mappedSports = useMemo(()=> {
-    if(!dataSports) return []
-    return dataSports.map(sport => ( 
+  const mappedSports = useMemo(() => {
+    if (!dataSports) return []
+    return dataSports.map(sport => (
       {
-        label: sport.name, 
+        label: sport.name,
         value: sport.name
       }
     ))
@@ -268,148 +266,153 @@ export default function Profile() {
         </View>
       ) : (
         <ImageBackground source={bg} style={styles.background}>
-        <View style={styles.overlay} />
-        <View style={{ paddingTop: 50, paddingHorizontal: 20 }}>
-          <View style={styles.justifyContainer}>
-            <Text style={styles.title}>Completar Perfil</Text>
-            <Image source={images.logo} style={styles.img} />
-          </View>
-          <View style={styles.formContainer}>
-            <View style={{...styles.txtInput, backgroundColor:'#ffffff10', borderRadius:0}}>
-              <Text style={styles.label}>Nombre</Text>
-              <TextInput
-                placeholder="Jhon Doe"
-                placeholderTextColor="#ffffff70"
-                value={name}
-                onChangeText={setName}
-                editable={false}
-              />
+          <View style={styles.overlay} />
+          <View style={{ paddingTop: 50, paddingHorizontal: 20 }}>
+            <View style={styles.justifyContainer}>
+              <Text style={styles.title}>Completar Perfil</Text>
+              <Image source={images.logo} style={styles.img} />
             </View>
-            <View style={styles.txtInput}>
-              <Text style={styles.label}>Nombre de usuario</Text>
-              <TextInput
-                placeholder="Jhon Doe"
-                placeholderTextColor="#ffffff70"
-                style={{color: Colors.WHITE}}
-                value={username}
-                onChangeText={setUsername}
-              />
-            </View>
-            <View style={styles.picker}>
-              <RNPickerSelect
-                placeholder={{
-                  label: 'Selecciona tu sexo',
-                  value: null,
-                }}
-                style={styles}
-                onValueChange={(itemValue) => setGenre(itemValue)}
-                items={genres}
-              />
-            </View>
-            <View style={styles.txtInput}>
-              <Text style={styles.label}>Fecha de nacimiento</Text>
-              <Pressable onPress={toggleDatePicker}>
+            <View style={styles.formContainer}>
+              <View style={{ ...styles.txtInput, backgroundColor: '#ffffff10', borderRadius: 0 }}>
+                <Text style={styles.label}>Nombre</Text>
                 <TextInput
-                  placeholder="Selecciona tu fecha de nacimiento"
-                  value={date.toLocaleDateString()}
+                  placeholder="Jhon Doe"
+                  placeholderTextColor="#ffffff70"
+                  value={name}
+                  onChangeText={setName}
                   editable={false}
-                  color='white'
                 />
-              </Pressable>
-              {showPicker && (
-                <DateTimePicker
-                  mode="date"
-                  display="default"
-                  value={date}
-                  onChange={onChangeDate}
+              </View>
+              <View style={styles.txtInput}>
+                <Text style={styles.label}>Nombre de usuario</Text>
+                <TextInput
+                  placeholder="Jhon Doe"
+                  placeholderTextColor="#ffffff70"
+                  style={{ color: Colors.WHITE }}
+                  value={username}
+                  onChangeText={setUsername}
                 />
-              )}
-            </View>
-            <View style={styles.picker}>
-              <RNPickerSelect
-                placeholder={{
-                  label: 'Selecciona tu deporte',
-                  value: null,
-                }}
-                style={styles}
-                onValueChange={(itemValue) => setSport(itemValue)}
-                items={mappedSports}
-              />
-            </View>
-            <View style={styles.picker}>
-              <RNPickerSelect
-                placeholder={{
-                  label: 'Selecciona tu país',
-                  value: null,
-                }}
-                style={styles}
-                onValueChange={handleCountryChange}
-                items={countryOptions.map((country) => (
-                  {
-                    label: country.label,
-                    value: country.value
-                  }
-                ))}
-              />
-            </View>
-            {selectedCountry && (
-            <View style={styles.picker}>
+              </View>
+              <View style={styles.picker}>
                 <RNPickerSelect
                   placeholder={{
-                  label: 'Selecciona tu estado',
-                  value: null,
-                }}
-                style={styles}
-                onValueChange={(value) => setSelectedState(value)}
-                items={stateOptions.map((state) => (
-                  {
-                  label: state.label,
-                  value: state.value
-                  }
-              ))}
-            />
-          </View>
-            )}
-            {selectedState && (
-              <View style={styles.picker}>
-                  <RNPickerSelect
-                    placeholder={{
-                    label: 'Selecciona tu municipio',
+                    label: 'Selecciona tu sexo',
                     value: null,
                   }}
                   style={styles}
-                  onValueChange={(value) => setSelectedMunicipality(value)}
-                  items={municipalityOptions.map((municipality) => (
+                  value={genre}
+                  onValueChange={(itemValue) => setGenre(itemValue)}
+                  items={genres}
+                />
+              </View>
+              <View style={styles.txtInput}>
+                <Text style={styles.label}>Fecha de nacimiento</Text>
+                <Pressable onPress={toggleDatePicker}>
+                  <TextInput
+                    placeholder="Selecciona tu fecha de nacimiento"
+                    value={date.toLocaleDateString()}
+                    editable={false}
+                    color='white'
+                  />
+                </Pressable>
+                {showPicker && (
+                  <DateTimePicker
+                    mode="date"
+                    display="default"
+                    value={date}
+                    onChange={onChangeDate}
+                  />
+                )}
+              </View>
+              <View style={styles.picker}>
+                <RNPickerSelect
+                  placeholder={{
+                    label: 'Selecciona tu deporte',
+                    value: null,
+                  }}
+                  style={styles}
+                  value={sport}
+                  onValueChange={(itemValue) => setSport(itemValue)}
+                  items={mappedSports}
+                />
+              </View>
+              <View style={styles.picker}>
+                <RNPickerSelect
+                  placeholder={{
+                    label: 'Selecciona tu país',
+                    value: null,
+                  }}
+                  style={styles}
+                  value={selectedCountry}
+                  onValueChange={handleCountryChange}
+                  items={countryOptions.map((country) => (
                     {
-                    label: municipality.label,
-                    value: municipality.value
+                      label: country.label,
+                      value: country.value
                     }
-                ))}
-              />
-            </View>
-            )}
-            <View style={styles.txtInput}>
-              <Text style={styles.label}>Equipo / Club / Gimnasio</Text>
-              <TextInput
-                placeholder="SmartFit"
-                placeholderTextColor="#ffffff70"
-                value={club}
-                onChangeText={setClub}
-                color="white"
-              />
-            </View> 
-          </View>
-
-          <TouchableOpacity style={styles.btnSave} onPress={updateProfile}>
-            <Text style={styles.textSave}>
-              {isLoading ? (
-                <ActivityIndicator size="small" color={Colors.WHITE} />
-              ) : (
-                "Guardar"
+                  ))}
+                />
+              </View>
+              {selectedCountry && (
+                <View style={styles.picker}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: 'Selecciona tu estado',
+                      value: null,
+                    }}
+                    style={styles}
+                    value={selectedState}
+                    onValueChange={(value) => setSelectedState(value)}
+                    items={stateOptions.map((state) => (
+                      {
+                        label: state.label,
+                        value: state.value
+                      }
+                    ))}
+                  />
+                </View>
               )}
-            </Text>
-          </TouchableOpacity>
-        </View>
+              {selectedState && (
+                <View style={styles.picker}>
+                  <RNPickerSelect
+                    placeholder={{
+                      label: 'Selecciona tu municipio',
+                      value: null,
+                    }}
+                    style={styles}
+                    value={selectedMunicipality}
+                    onValueChange={(value) => setSelectedMunicipality(value)}
+                    items={municipalityOptions.map((municipality) => (
+                      {
+                        label: municipality.label,
+                        value: municipality.value
+                      }
+                    ))}
+                  />
+                </View>
+              )}
+              <View style={styles.txtInput}>
+                <Text style={styles.label}>Equipo / Club / Gimnasio</Text>
+                <TextInput
+                  placeholder="SmartFit"
+                  placeholderTextColor="#ffffff70"
+                  value={club}
+                  onChangeText={setClub}
+                  color="white"
+                />
+              </View>
+            </View>
+
+            <TouchableOpacity style={styles.btnSave} onPress={updateProfile}>
+              <Text style={styles.textSave}>
+                {isLoading ? (
+                  <ActivityIndicator size="small" color={Colors.WHITE} />
+                ) : (
+                  "Guardar"
+                )}
+              </Text>
+            </TouchableOpacity>
+          </View>
         </ImageBackground>
       )}
     </>
@@ -418,18 +421,18 @@ export default function Profile() {
 
 const styles = StyleSheet.create({
   label: {
-    color: Colors.WHITE, 
-    opacity: 0.5, 
-    fontSize:11
+    color: Colors.WHITE,
+    opacity: 0.5,
+    fontSize: 11
   },
-  background:{
+  background: {
     flex: 1,
     resizeMode: "cover",
   },
   overlay: {
     position: 'absolute',
     width: '100%',
-    height:'100%',
+    height: '100%',
     backgroundColor: Colors.BLUE,
   },
   inputIOS: {
@@ -482,22 +485,22 @@ const styles = StyleSheet.create({
     padding: 20
   },
   txtInput: {
-    borderRadius:0,
+    borderRadius: 0,
     borderColor: Colors.WHITE,
     borderWidth: 0,
-    borderBottomColor:Colors.WHITE,
+    borderBottomColor: Colors.WHITE,
     borderBottomWidth: 1,
     padding: 10,
     paddingHorizontal: 16,
     width: "100%",
     borderRadius: 10,
-    marginBottom:10
+    marginBottom: 10
   },
   picker: {
     borderColor: Colors.WHITE,
     borderWidth: 1,
     borderRadius: 10,
-    height:44,
+    height: 44,
     overflow: "hidden",
     display: 'flex',
     justifyContent: 'center',
@@ -523,8 +526,8 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     // Propiedad para sombra en Android
     elevation: 5,
-    height:50,
-    display:'flex',
+    height: 50,
+    display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
   },
