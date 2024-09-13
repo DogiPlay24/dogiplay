@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Pressable,
+  ImageBackground
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { supabase } from "../../Utils/SupabaseConfig";
 import { useUser } from "@clerk/clerk-expo";
-import { Picker } from "@react-native-picker/picker";
+import RNPickerSelect from 'react-native-picker-select';
 import DateTimePicker from "@react-native-community/datetimepicker";
 import Colors from "../../Utils/Colors";
 import Toast from "react-native-toast-message";
@@ -19,6 +20,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigation } from "@react-navigation/native";
 import { images } from "./../../../assets/images/index";
 import { countries } from "../../Utils/Locations";
+import { getBackground } from "./../../../assets/images/index";
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -37,6 +39,8 @@ export default function Profile() {
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedState, setSelectedState] = useState("");
   const [selectedMunicipality, setSelectedMunicipality] = useState("");
+
+  const bg = useMemo(()=> getBackground(),[])
 
   const toggleDatePicker = () => {
     setShowPicker(!showPicker);
@@ -234,10 +238,27 @@ export default function Profile() {
 
   const municipalityOptions = selectedStateData
     ? selectedStateData.municipalities.map((municipality) => ({
-        label: municipality,
-        value: municipality,
-      }))
+      label: municipality,
+      value: municipality,
+    }))
     : [];
+
+
+  const genres = [
+    { label: 'Masculino', value: 'M' },
+    { label: 'Femenino', value: 'F' },
+    { label: 'Personalizado', value: 'P' },
+  ]
+
+  const mappedSports = useMemo(()=> {
+    if(!dataSports) return []
+    return dataSports.map(sport => ( 
+      {
+        label: sport.name, 
+        value: sport.name
+      }
+    ))
+  }, [dataSports])
 
   return (
     <>
@@ -246,55 +267,53 @@ export default function Profile() {
           <ActivityIndicator size="large" color={Colors.BLUE_DARK} />
         </View>
       ) : (
+        <ImageBackground source={bg} style={styles.background}>
+        <View style={styles.overlay} />
         <View style={{ paddingTop: 50, paddingHorizontal: 20 }}>
           <View style={styles.justifyContainer}>
             <Text style={styles.title}>Completar Perfil</Text>
             <Image source={images.logo} style={styles.img} />
           </View>
-
           <View style={styles.formContainer}>
-            <View style={styles.txtInput}>
-              <Text>Nombre</Text>
+            <View style={{...styles.txtInput, backgroundColor:'#ffffff10', borderRadius:0}}>
+              <Text style={styles.label}>Nombre</Text>
               <TextInput
                 placeholder="Jhon Doe"
+                placeholderTextColor="#ffffff70"
                 value={name}
                 onChangeText={setName}
                 editable={false}
               />
             </View>
-
             <View style={styles.txtInput}>
-              <Text>Nombre de usuario</Text>
+              <Text style={styles.label}>Nombre de usuario</Text>
               <TextInput
-                placeholder="JhonDoe"
+                placeholder="Jhon Doe"
+                placeholderTextColor="#ffffff70"
+                style={{color: Colors.WHITE}}
                 value={username}
                 onChangeText={setUsername}
               />
             </View>
-
             <View style={styles.picker}>
-              <Picker
-                selectedValue={genre}
+              <RNPickerSelect
+                placeholder={{
+                  label: 'Selecciona tu sexo',
+                  value: null,
+                }}
+                style={styles}
                 onValueChange={(itemValue) => setGenre(itemValue)}
-              >
-                <Picker.Item
-                  style={styles.pickerItem}
-                  label="Selecciona tu sexo"
-                  value=""
-                />
-                <Picker.Item label="Masculino" value="M" />
-                <Picker.Item label="Femenino" value="F" />
-                <Picker.Item label="Personalizado" value="P" />
-              </Picker>
+                items={genres}
+              />
             </View>
-
             <View style={styles.txtInput}>
-              <Text>Fecha de nacimiento</Text>
+              <Text style={styles.label}>Fecha de nacimiento</Text>
               <Pressable onPress={toggleDatePicker}>
                 <TextInput
                   placeholder="Selecciona tu fecha de nacimiento"
                   value={date.toLocaleDateString()}
                   editable={false}
+                  color='white'
                 />
               </Pressable>
               {showPicker && (
@@ -307,88 +326,78 @@ export default function Profile() {
               )}
             </View>
             <View style={styles.picker}>
-              <Picker
-                selectedValue={sport}
+              <RNPickerSelect
+                placeholder={{
+                  label: 'Selecciona tu deporte',
+                  value: null,
+                }}
+                style={styles}
                 onValueChange={(itemValue) => setSport(itemValue)}
-              >
-                <Picker.Item
-                  style={styles.pickerItem}
-                  label="Selecciona tu Deporte"
-                  value=""
-                />
-                {dataSports?.map((item, index) => (
-                  <Picker.Item
-                    key={index}
-                    label={item.name}
-                    value={item.name}
-                  />
-                ))}
-              </Picker>
-            </View>
-            <View style={styles.picker}>
-              <Picker
-                selectedValue={selectedCountry}
-                onValueChange={handleCountryChange}
-              >
-                <Picker.Item
-                  style={styles.pickerItem}
-                  label="Selecciona tu país"
-                  value=""
-                />
-                {countryOptions.map((country) => (
-                  <Picker.Item
-                    key={country.value}
-                    label={country.label}
-                    value={country.value}
-                  />
-                ))}
-              </Picker>
-            </View>
-
-            {selectedCountry && (
-              <View style={styles.picker}>
-                <Picker
-                  selectedValue={selectedState}
-                  onValueChange={(value) => setSelectedState(value)}
-                >
-                  <Picker.Item label="Selecciona tu estado" value="" />
-                  {stateOptions.map((state) => (
-                    <Picker.Item
-                      key={state.value}
-                      label={state.label}
-                      value={state.value}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            )}
-
-            {selectedState && (
-              <View style={styles.picker}>
-                <Picker
-                  selectedValue={selectedMunicipality}
-                  onValueChange={(value) => setSelectedMunicipality(value)}
-                >
-                  <Picker.Item label="Selecciona tu municipio" value="" />
-                  {municipalityOptions.map((municipality) => (
-                    <Picker.Item
-                      key={municipality.value}
-                      label={municipality.label}
-                      value={municipality.value}
-                    />
-                  ))}
-                </Picker>
-              </View>
-            )}
-
-            <View style={styles.txtInput}>
-              <Text>Equipo / Club / Gimnasio</Text>
-              <TextInput
-                placeholder="SmartFit"
-                value={club}
-                onChangeText={setClub}
+                items={mappedSports}
               />
             </View>
+            <View style={styles.picker}>
+              <RNPickerSelect
+                placeholder={{
+                  label: 'Selecciona tu país',
+                  value: null,
+                }}
+                style={styles}
+                onValueChange={handleCountryChange}
+                items={countryOptions.map((country) => (
+                  {
+                    label: country.label,
+                    value: country.value
+                  }
+                ))}
+              />
+            </View>
+            {selectedCountry && (
+            <View style={styles.picker}>
+                <RNPickerSelect
+                  placeholder={{
+                  label: 'Selecciona tu estado',
+                  value: null,
+                }}
+                style={styles}
+                onValueChange={(value) => setSelectedState(value)}
+                items={stateOptions.map((state) => (
+                  {
+                  label: state.label,
+                  value: state.value
+                  }
+              ))}
+            />
+          </View>
+            )}
+            {selectedState && (
+              <View style={styles.picker}>
+                  <RNPickerSelect
+                    placeholder={{
+                    label: 'Selecciona tu municipio',
+                    value: null,
+                  }}
+                  style={styles}
+                  onValueChange={(value) => setSelectedMunicipality(value)}
+                  items={municipalityOptions.map((municipality) => (
+                    {
+                    label: municipality.label,
+                    value: municipality.value
+                    }
+                ))}
+              />
+            </View>
+            )}
+            <View style={styles.txtInput}>
+              <Text style={styles.label}>Equipo / Club / Gimnasio</Text>
+              <TextInput
+                placeholder="SmartFit"
+                placeholderTextColor="#ffffff70"
+                value={club}
+                onChangeText={setClub}
+                color="white"
+              />
+            </View> 
           </View>
 
           <TouchableOpacity style={styles.btnSave} onPress={updateProfile}>
@@ -401,12 +410,46 @@ export default function Profile() {
             </Text>
           </TouchableOpacity>
         </View>
+        </ImageBackground>
       )}
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  label: {
+    color: Colors.WHITE, 
+    opacity: 0.5, 
+    fontSize:11
+  },
+  background:{
+    flex: 1,
+    resizeMode: "cover",
+  },
+  overlay: {
+    position: 'absolute',
+    width: '100%',
+    height:'100%',
+    backgroundColor: Colors.BLUE,
+  },
+  inputIOS: {
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 0,
+    paddingRight: 30,
+    color: Colors.WHITE
+  },
+  inputAndroid: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderWidth: 0.5,
+    borderColor: 'purple',
+    borderRadius: 8,
+    color: 'black',
+    paddingRight: 30,
+  },
   loader: {
     width: "100%",
     height: "100%",
@@ -424,6 +467,7 @@ const styles = StyleSheet.create({
     fontFamily: "Poppins-Regular",
     fontWeight: "700",
     fontSize: 20,
+    color: Colors.WHITE
   },
   img: {
     width: 60,
@@ -433,27 +477,32 @@ const styles = StyleSheet.create({
   formContainer: {
     marginTop: 15,
     gap: 10,
+    backgroundColor: Colors.BLUE_DARK,
+    borderRadius: 5,
+    padding: 20
   },
   txtInput: {
-    borderColor: Colors.GREY,
-    borderWidth: 1,
-    padding: 4,
+    borderRadius:0,
+    borderColor: Colors.WHITE,
+    borderWidth: 0,
+    borderBottomColor:Colors.WHITE,
+    borderBottomWidth: 1,
+    padding: 10,
     paddingHorizontal: 16,
     width: "100%",
     borderRadius: 10,
+    marginBottom:10
   },
   picker: {
-    borderColor: Colors.GREY,
+    borderColor: Colors.WHITE,
     borderWidth: 1,
     borderRadius: 10,
+    height:44,
     overflow: "hidden",
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: "100%",
-  },
-  pickerItem: {
-    color: Colors.GREY,
-  },
-  pickerItemSelect: {
-    color: Colors.BLACK,
   },
   textSave: {
     color: Colors.WHITE,
@@ -474,5 +523,9 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     // Propiedad para sombra en Android
     elevation: 5,
+    height:50,
+    display:'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
   },
 });
