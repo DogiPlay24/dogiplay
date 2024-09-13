@@ -14,6 +14,6 @@ const backgrounds = [
 ]
 
 export const getBackground = () => {
-    const number = Math.floor(Math.random() * backgrounds.length - 1);
-    return backgrounds[number].uri
-}
+    const number = Math.floor(Math.random() * backgrounds.length);
+    return backgrounds[number].uri;
+  };
