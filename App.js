@@ -1,14 +1,15 @@
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import SplashScreen from "./Apps/Screens/SplashScreen";
-import FONTS from './assets/fonts';
+import FONTS from "./assets/fonts";
 import LoginScreen from "./Apps/Screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer } from "@react-navigation/native";
 import TabNavigation from "./Apps/Navigations/TabNavigation";
 import Toast from "react-native-toast-message";
-
+import ProfileForm from "./Apps/Screens/Forms/ProfileForm";
+import MainNavigation from "./Apps/Navigations/MainNavigation";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -16,7 +17,7 @@ export default function App() {
   const [fontsLoaded] = useFonts(FONTS);
 
   useEffect(() => {
-    fontsLoaded && setTimeout(async () => setIsReady(true) , 5000);
+    fontsLoaded && setTimeout(async () => setIsReady(true), 5000);
   }, [fontsLoaded]);
 
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -55,10 +56,10 @@ export default function App() {
       publishableKey={publishableKey}
       tokenCache={tokenCache}
       style={{ flex: 1 }}
-      >
+    >
       <SignedIn>
         <NavigationContainer>
-          <TabNavigation />
+          <MainNavigation />
         </NavigationContainer>
       </SignedIn>
       <SignedOut>{!isReady ? <SplashScreen /> : <LoginScreen />}</SignedOut>
