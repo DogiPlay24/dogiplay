@@ -7,5 +7,5 @@ export default {
   GREY: "#9C9589",
   GOLD: "#BE8C29",
   LIGHT_BLUE: '#5c67ac',
-  BLACK: "000000"
+  BLACK: "#000000"
 };
