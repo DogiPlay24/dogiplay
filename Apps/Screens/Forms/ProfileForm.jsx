@@ -24,6 +24,7 @@ import { getBackground } from "./../../../assets/images/index";
 
 export default function Profile() {
   const { t } = useTranslation();
+  const profileForm = t("profileForm", { returnObjects: true });
   const { user } = useUser();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
@@ -269,12 +270,12 @@ export default function Profile() {
           <View style={styles.overlay} />
           <View style={{ paddingTop: 50, paddingHorizontal: 20 }}>
             <View style={styles.justifyContainer}>
-              <Text style={styles.title}>Completar Perfil</Text>
+              <Text style={styles.title}>{profileForm.title}</Text>
               <Image source={images.logo} style={styles.img} />
             </View>
             <View style={styles.formContainer}>
               <View style={{ ...styles.txtInput, backgroundColor: '#ffffff10', borderRadius: 0 }}>
-                <Text style={styles.label}>Nombre</Text>
+                <Text style={styles.label}>{profileForm.name}</Text>
                 <TextInput
                   placeholder="Jhon Doe"
                   placeholderTextColor="#ffffff70"
@@ -284,7 +285,7 @@ export default function Profile() {
                 />
               </View>
               <View style={styles.txtInput}>
-                <Text style={styles.label}>Nombre de usuario</Text>
+                <Text style={styles.label}>{profileForm.userName}</Text>
                 <TextInput
                   placeholder="Jhon Doe"
                   placeholderTextColor="#ffffff70"
@@ -296,7 +297,7 @@ export default function Profile() {
               <View style={styles.picker}>
                 <RNPickerSelect
                   placeholder={{
-                    label: 'Selecciona tu sexo',
+                    label: `${profileForm.genre}`,
                     value: null,
                   }}
                   style={styles}
@@ -306,10 +307,10 @@ export default function Profile() {
                 />
               </View>
               <View style={styles.txtInput}>
-                <Text style={styles.label}>Fecha de nacimiento</Text>
+                <Text style={styles.label}>{profileForm.birth}</Text>
                 <Pressable onPress={toggleDatePicker}>
                   <TextInput
-                    placeholder="Selecciona tu fecha de nacimiento"
+                    placeholder={profileForm.placeholderBirth}
                     value={date.toLocaleDateString()}
                     editable={false}
                     color='white'
@@ -327,7 +328,7 @@ export default function Profile() {
               <View style={styles.picker}>
                 <RNPickerSelect
                   placeholder={{
-                    label: 'Selecciona tu deporte',
+                    label: `${profileForm.sport}`,
                     value: null,
                   }}
                   style={styles}
@@ -339,7 +340,7 @@ export default function Profile() {
               <View style={styles.picker}>
                 <RNPickerSelect
                   placeholder={{
-                    label: 'Selecciona tu país',
+                    label: `${profileForm.country}`,
                     value: null,
                   }}
                   style={styles}
@@ -357,7 +358,7 @@ export default function Profile() {
                 <View style={styles.picker}>
                   <RNPickerSelect
                     placeholder={{
-                      label: 'Selecciona tu estado',
+                      label: `${profileForm.state}`,
                       value: null,
                     }}
                     style={styles}
@@ -376,7 +377,7 @@ export default function Profile() {
                 <View style={styles.picker}>
                   <RNPickerSelect
                     placeholder={{
-                      label: 'Selecciona tu municipio',
+                      label: `${profileForm.municipality}`,
                       value: null,
                     }}
                     style={styles}
@@ -392,7 +393,7 @@ export default function Profile() {
                 </View>
               )}
               <View style={styles.txtInput}>
-                <Text style={styles.label}>Equipo / Club / Gimnasio</Text>
+                <Text style={styles.label}>{profileForm.team}</Text>
                 <TextInput
                   placeholder="SmartFit"
                   placeholderTextColor="#ffffff70"
@@ -478,8 +479,8 @@ const styles = StyleSheet.create({
     objectFit: "contain",
   },
   formContainer: {
-    marginTop: 15,
-    gap: 10,
+    marginTop: 5,
+    gap: 4,
     backgroundColor: Colors.BLUE_DARK,
     borderRadius: 5,
     padding: 20
