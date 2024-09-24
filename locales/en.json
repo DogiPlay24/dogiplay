@@ -32,6 +32,19 @@
         "emailPattern": "Please enter a valid email address",
         "passwordLength": "The password must be at least 8 characters long"
     },
+    "profileForm": {
+        "title": "Complete Profile",
+        "name": "Name",
+        "userName": "User name",
+        "genre": "Select your genre",
+        "birthday": "Date of Birth",
+        "placeholderBirthday": "Select your date of birth",
+        "sport": "Select your Sport",
+        "country": "Select your Country",
+        "state": "Select your State",
+        "municipality": "Select your Municipality",
+        "team": "Team / Club / Gym"
+    },
     "loginScreen": {
         "login": "Or log in with:"
     },

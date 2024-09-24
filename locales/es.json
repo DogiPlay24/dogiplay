@@ -32,6 +32,19 @@
         "emailPattern": "Por favor ingresa un correo electrónico válido",
         "passwordLength": "La contraseña debe tener al menos 8 caracteres"
     },
+    "profileForm": {
+        "title": "Completar Perfil",
+        "name": "Nombre",
+        "userName": "Nombre de usuario",
+        "genre": "Selecciona tu sexo",
+        "birth": "Fecha de nacimiento",
+        "placeholderBirth": "Selecciona tu fecha de nacimiento",
+        "sport": "Selecciona tu deporte",
+        "country": "Selecciona tu País",
+        "state": "Selecciona tu Estado",
+        "municipality": "Selecciona tu Municipio",
+        "team": "Equipo / Club / Gimnasio"
+    },
     "loginScreen": {
         "login": "O inicia sesión con:"
     },
