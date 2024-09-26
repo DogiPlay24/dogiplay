@@ -279,6 +279,7 @@ export default function Profile() {
                 <TextInput
                   placeholder="Jhon Doe"
                   placeholderTextColor="#ffffff70"
+                  style={{ color: Colors.WHITE }}
                   value={name}
                   onChangeText={setName}
                   editable={false}
@@ -308,7 +309,7 @@ export default function Profile() {
               </View>
               <View style={styles.txtInput}>
                 <Text style={styles.label}>{profileForm.birth}</Text>
-                <Pressable onPress={toggleDatePicker}>
+                <Pressable onPress={toggleDatePicker} style={{height: 30}}>
                   <TextInput
                     placeholder={profileForm.placeholderBirth}
                     value={date.toLocaleDateString()}
