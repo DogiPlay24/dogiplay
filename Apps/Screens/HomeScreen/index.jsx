@@ -14,6 +14,7 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import PostItem from "./PostItem";
 import { useRoute } from "@react-navigation/native";
+import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -30,28 +31,68 @@ export default function HomeScreen() {
   }, [user]);
 
   useEffect(() => {
-    getLatestPost();
-  }, []);
+    user && getLatestPost();
+  }, [user]);
 
   const getLatestPost = async () => {
-    const userSport = user?.sport;
     setLoading(true);
+
+    const userSport = await getUserSport();
+    console.log("🚀 ~ getLatestPost ~ userSport:", userSport);
+
+    if (!userSport) {
+      console.error("No se encontró deporte");
+      setLoading(false);
+      return;
+    }
+
+    // const { data, error } = await supabase
+    //   .from("Posts")
+    //   .select("*, Users (username, name, profileImage, sport)")
+    //   .eq("Users.sport", "Fútbol")
+    //   .eq("Users.email", user?.primaryEmailAddress.emailAddress)
+    //   .range(page * 8, (page + 1) * 8 - 1)
+    //   .order("id", { ascending: false });
     const { data, error } = await supabase
-      .from("Posts")
-      .select(
-        "*, Users(username, name, profileImage, sport), Reactions(postId, userEmail)"
-      )
-      .eq("Users.sport", userSport)
-      .range(page * 8, (page + 1) * 8 - 1) // Trae 8 publicaciones por página
+      .from("Users")
+      .select("name, username, email, sport, Posts (*)")
+      .eq(`Posts.emailRef`, user?.primaryEmailAddress.emailAddress)
+      .eq(`sport`, userSport)
+      .range(page * 8, (page + 1) * 8 - 1)
       .order("id", { ascending: false });
 
+    if (data == "" || data == []) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error de actualización",
+        text2: "Error al encontrar publicaciones.",
+      });
+    }
+
     if (!error) {
-      console.log("Fetched posts:", data);
-      setPostList((prevPostList) => [...prevPostList, ...data]);
-      setLoading(false);
+      console.log("Fetched posts:", data[0].Posts);
+      if (data[0]?.Posts) {
+        setPostList((prevPostList) => [...prevPostList, ...data[0].Posts]);
+      }
     } else {
       console.error("Error fetching posts from Supabase:", error);
     }
+
+    setLoading(false);
+  };
+
+  const getUserSport = async () => {
+    const { data, error } = await supabase
+      .from("Users")
+      .select("sport")
+      .eq("email", user?.primaryEmailAddress.emailAddress);
+
+    if (error) {
+      console.error("Error fetching user sport:", error);
+      return null;
+    }
+
+    return data?.[0]?.sport || null;
   };
 
   const loadMorePosts = () => {
