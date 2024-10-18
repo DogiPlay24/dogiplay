@@ -1,24 +1,14 @@
-import React, { useEffect, useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  Dimensions,
-} from "react-native";
+import React, { useCallback, useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, Dimensions } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { supabase } from "../../Utils/SupabaseConfig";
-import Ionicons from "@expo/vector-icons/Ionicons";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import PostItem from "./PostItem";
-import { useRoute } from "@react-navigation/native";
+import { useFocusEffect, useRoute } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 
 export default function HomeScreen() {
   const { user } = useUser();
-  const params = useRoute().params;
   const [postList, setPostList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [currentMedia, setCurrentMedia] = useState(0);
@@ -28,11 +18,18 @@ export default function HomeScreen() {
 
   useEffect(() => {
     user && updateProfileImage();
+    setPage(0);
   }, [user]);
 
-  useEffect(() => {
-    user && getLatestPost();
-  }, [user]);
+  // useEffect(() => {
+  //   user && getLatestPost();
+  // }, [user]);
+
+  useFocusEffect(
+    useCallback(() => {
+      getLatestPost();
+    }, [])
+  );
 
   const getLatestPost = async () => {
     setLoading(true);
@@ -46,13 +43,6 @@ export default function HomeScreen() {
       return;
     }
 
-    // const { data, error } = await supabase
-    //   .from("Posts")
-    //   .select("*, Users (username, name, profileImage, sport)")
-    //   .eq("Users.sport", "Fútbol")
-    //   .eq("Users.email", user?.primaryEmailAddress.emailAddress)
-    //   .range(page * 8, (page + 1) * 8 - 1)
-    //   .order("id", { ascending: false });
     const { data, error } = await supabase
       .from("Users")
       .select("name, username, email, sport, Posts (*)")
@@ -72,7 +62,9 @@ export default function HomeScreen() {
     if (!error) {
       console.log("Fetched posts:", data[0].Posts);
       if (data[0]?.Posts) {
-        setPostList((prevPostList) => [...prevPostList, ...data[0].Posts]);
+        page === 0
+          ? setPostList(data[0].Posts)
+          : setPostList((prevPostList) => [...prevPostList, ...data[0].Posts]);
       }
     } else {
       console.error("Error fetching posts from Supabase:", error);
