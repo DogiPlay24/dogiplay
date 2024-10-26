@@ -1,4 +1,11 @@
-import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import { useRef, useEffect, useState } from "react";
 import Colors from "./../../Utils/Colors";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -7,6 +14,7 @@ import { ResizeMode, Video } from "expo-av";
 
 export default function PostItem({
   media,
+  owner,
   activeIndex,
   index,
   likeHandler,
@@ -29,6 +37,7 @@ export default function PostItem({
     return result;
   };
 
+
   useEffect(() => {
     if (index === activeIndex) {
       videoRef.current?.playAsync();
@@ -39,6 +48,18 @@ export default function PostItem({
 
   return (
     <View>
+      {/* <View style={styles.main}>
+        <View>
+          <View style={styles.main}>
+            <Image
+              source={{ uri: owner?.profileImage }}
+              style={styles.profileImg}
+            />
+            <Text style={styles.username}>{owner.username}</Text>
+          </View>
+          <Text>{media?.caption}</Text>
+        </View>
+      </View> */}
       {isVideo(media?.mediaUrl) ? (
         <Video
           ref={videoRef}
