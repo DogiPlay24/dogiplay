@@ -46,7 +46,7 @@ export default function HomeScreen() {
     const { data, error } = await supabase
       .from("Users")
       .select("name, username, email, sport, Posts (*)")
-      .eq(`Posts.emailRef`, user?.primaryEmailAddress.emailAddress)
+      //.eq(`Posts.emailRef`, user?.primaryEmailAddress.emailAddress)
       .eq(`sport`, userSport)
       .range(page * 8, (page + 1) * 8 - 1)
       .order("id", { ascending: false });
