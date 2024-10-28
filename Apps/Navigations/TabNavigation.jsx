@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import AddScreen from "./../Screens/AddScreen";
 import ProfileScreen from "./../Screens/ProfileScreen";
@@ -7,21 +7,28 @@ import { Ionicons } from "@expo/vector-icons";
 import HallScreen from "../Screens/HallScreen";
 import HomeNavigation from "./HomeNavigation";
 import { useUser } from "@clerk/clerk-expo";
-import { Image } from "react-native";
+import { Image, View, Text } from "react-native";
 import AddNavigation from "./AddNavigation";
+import * as Animatable from "react-native-animatable";
 
 const Tab = createBottomTabNavigator();
 
 export default function TabNavigation() {
   const { user } = useUser();
   const profileImage = user?.imageUrl;
+  const [showNumbers, setShowNumbers] = useState(false);
+
+  const handleFocusTrophy = () => {
+    setShowNumbers(true);
+    setTimeout(() => setShowNumbers(false), 1500); // Ocultar números después de 1.5s
+  };
 
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: Colors.WHITE,
         tabBarShowLabel: false,
-        tabBarStyle: { backgroundColor: Colors.BLUE_DARK },
+        tabBarStyle: { backgroundColor: "#1f1f1f" },
         headerShown: false,
       }}
     >
@@ -46,9 +53,80 @@ export default function TabNavigation() {
       <Tab.Screen
         name="Hall"
         component={HallScreen}
+        listeners={{
+          tabPress: handleFocusTrophy,
+        }}
         options={{
-          tabBarIcon: ({ color, size }) => (
-            <Ionicons name="trophy" size={size} color={color} />
+          tabBarIcon: ({ size }) => (
+            <View style={{ alignItems: "center" }}>
+              <Ionicons name="trophy" size={size} color="#FFD700" />
+              {showNumbers && (
+                <View style={{ position: "absolute", top: -30, flexDirection: "row" }}>
+                  <Animatable.View
+                    animation="fadeInUp"
+                    duration={800}
+                    delay={200}
+                    style={{
+                      backgroundColor: "#FFD700", // Dorado para el número 1
+                      width: 24,
+                      height: 24,
+                      borderRadius: 12,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginHorizontal: 5,
+                    }}
+                  >
+                    <Text style={{ color: "black", fontSize: 12 }}>1</Text>
+                  </Animatable.View>
+                  <Animatable.View
+                    animation="fadeInUp"
+                    duration={800}
+                    delay={400}
+                    style={{
+                      backgroundColor: "#C0C0C0", // Plateado para el número 2
+                      width: 24,
+                      height: 24,
+                      borderRadius: 12,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginHorizontal: 5,
+                    }}
+                  >
+                    <Text style={{ color: "black", fontSize: 12 }}>2</Text>
+                  </Animatable.View>
+                  <Animatable.View
+                    animation="fadeInUp"
+                    duration={800}
+                    delay={600}
+                    style={{
+                      backgroundColor: "#CD7F32", // Bronce para el número 3
+                      width: 24,
+                      height: 24,
+                      borderRadius: 12,
+                      justifyContent: "center",
+                      alignItems: "center",
+                      marginHorizontal: 5,
+                    }}
+                  >
+                    <Text style={{ color: "black", fontSize: 12 }}>3</Text>
+                  </Animatable.View>
+                </View>
+              )}
+            </View>
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Extra"
+        component={AddNavigation}
+        options={{
+          tabBarIcon: ({ color, size, focused }) => (
+            <Animatable.View
+              animation={focused ? "bounceIn" : undefined}
+              duration={1000}
+            >
+              <Ionicons name="search" size={size} color={color} />
+            </Animatable.View>
           ),
         }}
       />
