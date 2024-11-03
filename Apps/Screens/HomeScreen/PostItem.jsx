@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, Image, Dimensions, ActivityIndicator } from "react-native";
+import { View, Image, Dimensions, ActivityIndicator, StyleSheet, Animated } from "react-native";
 import { useRef, useEffect, useState } from "react";
 import Colors from "./../../Utils/Colors";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
@@ -9,7 +9,7 @@ export default function PostItem({
   media,
   activeIndex,
   index,
-  likeHandler,
+  verified, // Recibe el estado de verificación
   user,
 }) {
   const videoRef = useRef(null);
@@ -22,12 +22,18 @@ export default function PostItem({
     return url?.match(/\.(mp4|mov|avi|mkv)$/i);
   };
 
-  const checkIsAlreadyLike = () => {
-    const result = media.PostLikes?.find(
-      (item) => item.userEmail == user.primaryEmailAddress.emailAddress
-    );
-    return result;
-  };
+  // Configuración de la animación para el ícono de verificación
+  const iconAnimation = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // Ejecutar la animación cuando el componente se monta
+    Animated.spring(iconAnimation, {
+      toValue: 1,
+      friction: 3, // Controla la resistencia del rebote
+      tension: 40, // Controla la intensidad del rebote
+      useNativeDriver: true,
+    }).start();
+  }, []);
 
   useEffect(() => {
     if (index === activeIndex) {
@@ -39,6 +45,21 @@ export default function PostItem({
 
   return (
     <View>
+      {/* Ícono de verificación en el centro vertical de la pantalla con animación */}
+      <Animated.View
+        style={[
+          styles.verifiedIcon,
+          {
+            transform: [{ scale: iconAnimation }], // Aplica la animación de escala
+          },
+        ]}
+      >
+        <Ionicons
+          name="checkmark-circle"
+          size={28}
+          color="#87CEEB" // Cambia el color del ícono a azul cielo
+        />
+      </Animated.View>
       {isVideo(media?.mediaUrl) ? (
         <Video
           ref={videoRef}
@@ -67,39 +88,11 @@ export default function PostItem({
 }
 
 const styles = StyleSheet.create({
-  main: {
+  verifiedIcon: {
     position: "absolute",
-    zIndex: 2,
-    bottom: 20,
-    padding: 20,
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "flex-end",
-    width: "100%",
-  },
-  post: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 10,
-  },
-  profileImg: {
-    width: 40,
-    height: 40,
-    backgroundColor: Colors.WHITE,
-    borderRadius: 99,
-  },
-  username: {
-    fontFamily: "Poppins-Bold",
-    color: Colors.WHITE,
-    fontSize: 16,
-  },
-  caption: {
-    fontFamily: "Poppins-Bold",
-    color: Colors.WHITE,
-    fontSize: 16,
-    marginTop: 8,
+    left: 10,
+    top: Dimensions.get("window").height / 2 - 14, // Centra el ícono verticalmente
+    zIndex: 1, // Asegura que el ícono esté sobre la media
   },
   media: {
     alignSelf: "center",

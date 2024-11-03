@@ -1,11 +1,12 @@
-import React, { useCallback, useEffect, useState } from "react";
-import { View, StyleSheet, FlatList, Dimensions } from "react-native";
+import React, { useCallback, useEffect, useState, useRef } from "react";
+import { View, StyleSheet, FlatList, Dimensions, Animated } from "react-native";
 import { useUser } from "@clerk/clerk-expo";
 import { supabase } from "../../Utils/SupabaseConfig";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import PostItem from "./PostItem";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import Icon from "react-native-vector-icons/FontAwesome"; // Importa el ícono
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -13,17 +14,20 @@ export default function HomeScreen() {
   const [loading, setLoading] = useState(false);
   const [currentMedia, setCurrentMedia] = useState(0);
   const WindowHeight = Dimensions.get("window").height;
+  const WindowWidth = Dimensions.get("window").width;
   const BottomTabHeight = useBottomTabBarHeight();
   const [page, setPage] = useState(0);
+  const [username, setUsername] = useState("");
+  const [profileImg, setProfileImg] = useState("");
+  const [verified, setVerified] = useState(false); // Estado de verificación
+
+  const scaleAnim = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     user && updateProfileImage();
     setPage(0);
+    // getUserVerified(); // Llama la función para obtener el estado de verificación desde la base de datos
   }, [user]);
-
-  // useEffect(() => {
-  //   user && getLatestPost();
-  // }, [user]);
 
   useFocusEffect(
     useCallback(() => {
@@ -35,8 +39,6 @@ export default function HomeScreen() {
     setLoading(true);
 
     const userSport = await getUserSport();
-    console.log("🚀 ~ getLatestPost ~ userSport:", userSport);
-
     if (!userSport) {
       console.error("No se encontró deporte");
       setLoading(false);
@@ -45,30 +47,26 @@ export default function HomeScreen() {
 
     const { data, error } = await supabase
       .from("Users")
-      .select("name, username, email, sport, Posts (*)")
-      //.eq(`Posts.emailRef`, user?.primaryEmailAddress.emailAddress)
-      .eq(`sport`, userSport)
+      .select("name, sport, Posts(*)") // Se omite el campo 'verified' aquí, pero se puede agregar si es necesario
+      .eq("sport", userSport)
       .range(page * 8, (page + 1) * 8 - 1)
       .order("id", { ascending: false });
 
-    if (data == "" || data == []) {
+    if (error) {
+      console.error("Error fetching posts from Supabase:", error);
+      setLoading(false);
       Toast.show({
         type: "error",
         text1: "❌ Error de actualización",
         text2: "Error al encontrar publicaciones.",
       });
+      return;
     }
 
-    if (!error) {
-      console.log("Fetched posts:", data[0].Posts);
-      if (data[0]?.Posts) {
-        page === 0
-          ? setPostList(data[0].Posts)
-          : setPostList((prevPostList) => [...prevPostList, ...data[0].Posts]);
-      }
-    } else {
-      console.error("Error fetching posts from Supabase:", error);
-    }
+    const allPosts = data.flatMap(user => user.Posts);
+    setPostList((prevPostList) =>
+      page === 0 ? allPosts : [...prevPostList, ...allPosts]
+    );
 
     setLoading(false);
   };
@@ -84,7 +82,22 @@ export default function HomeScreen() {
       return null;
     }
 
-    return data?.[0]?.sport || null;
+    return data[0].sport || null;
+  };
+
+  // Función que obtendría el estado de verificación del usuario
+  const getUserVerified = async () => {
+    // const { data, error } = await supabase
+    //   .from("Users")
+    //   .select("verified") // Cambia 'verified' al nombre correcto en tu base de datos
+    //   .eq("email", user?.primaryEmailAddress.emailAddress);
+
+    // if (error) {
+    //   console.error("Error fetching verified status:", error);
+    //   return null;
+    // }
+
+    // setVerified(data[0]?.verified || false); // Actualiza el estado de verificación
   };
 
   const loadMorePosts = () => {
@@ -94,34 +107,73 @@ export default function HomeScreen() {
   };
 
   const updateProfileImage = async () => {
-    const { data, error } = await supabase
+    await supabase
       .from("Users")
       .update({ profileImage: user?.imageUrl })
       .eq("email", user?.primaryEmailAddress?.emailAddress)
       .is("profileImage", null)
       .select();
   };
+
+  const handleScroll = (e) => {
+    const index = Math.round(e.nativeEvent.contentOffset.y / WindowHeight);
+
+    if (index !== currentMedia) {
+      setCurrentMedia(index);
+
+      Animated.timing(scaleAnim, {
+        toValue: 1.05,
+        duration: 200,
+        useNativeDriver: true,
+      }).start(() => {
+        Animated.timing(scaleAnim, {
+          toValue: 1,
+          duration: 200,
+          useNativeDriver: true,
+        }).start();
+      });
+    }
+  };
+
   return (
     <View style={styles.main}>
       <FlatList
         data={postList}
         pagingEnabled
+        snapToInterval={WindowHeight}
+        snapToAlignment="start"
+        decelerationRate="fast"
+        onRefresh={getLatestPost}
+        refreshing={loading}
         onEndReached={loadMorePosts}
-        onEndReachedThreshold={0.5}
-        onScroll={(e) => {
-          const index = Math.round(
-            e.nativeEvent.contentOffset.y / (WindowHeight - BottomTabHeight)
-          );
-          setCurrentMedia(index);
-        }}
+        onEndReachedThreshold={0.2}
+        onScroll={handleScroll}
         renderItem={({ item, index }) => (
+          <Animated.View
+          style={[
+            styles.postContainer,
+            {
+              height: WindowHeight,
+              width: WindowWidth,
+              transform: [{ scale: currentMedia === index ? scaleAnim : 1 }],
+            },
+          ]}
+        >
           <PostItem
             media={item}
             index={index}
             activeIndex={currentMedia}
             user={user}
+            verified={verified} // Pasa el estado de verificación aquí
+            owner={{
+              username: username,
+              profileImage: profileImg,
+            }}
           />
+        </Animated.View>
+        
         )}
+        keyExtractor={(item, index) => index.toString()}
       />
     </View>
   );
@@ -129,8 +181,15 @@ export default function HomeScreen() {
 
 const styles = StyleSheet.create({
   main: {
-    padding: 20,
-    paddingTop: 50,
-    marginBottom: 60,
+    flex: 1,
+  },
+  postContainer: {
+    flex: 1,
+  },
+  verifiedIcon: {
+    position: "absolute",
+    left: 10,
+    top: "50%",
+    transform: [{ translateY: -12 }], // Para centrar verticalmente
   },
 });
