@@ -7,6 +7,7 @@ import PostItem from "./PostItem";
 import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
 import Icon from "react-native-vector-icons/FontAwesome"; // Importa el ícono
+import Dogibar from './Dogibar';
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -137,6 +138,7 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.main}>
+      <Dogibar/>
       <FlatList
         data={postList}
         pagingEnabled
