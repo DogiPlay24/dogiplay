@@ -7,6 +7,7 @@ import { ResizeMode, Video } from "expo-av";
 
 export default function PostItem({
   media,
+  owner,
   activeIndex,
   index,
   verified, // Recibe el estado de verificación
