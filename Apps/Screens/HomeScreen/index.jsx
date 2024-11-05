@@ -4,8 +4,9 @@ import { useUser } from "@clerk/clerk-expo";
 import { supabase } from "../../Utils/SupabaseConfig";
 import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 import PostItem from "./PostItem";
-import { useFocusEffect, useRoute } from "@react-navigation/native";
+import { useFocusEffect } from "@react-navigation/native";
 import Toast from "react-native-toast-message";
+import Dogibar from './Dogibar';
 
 export default function HomeScreen() {
   const { user } = useUser();
@@ -107,6 +108,7 @@ export default function HomeScreen() {
   };
   return (
     <View style={styles.main}>
+      <Dogibar/>
       <FlatList
         data={postList}
         pagingEnabled
