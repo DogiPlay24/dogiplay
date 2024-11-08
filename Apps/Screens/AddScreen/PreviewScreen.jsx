@@ -13,7 +13,6 @@ import { useUser } from "@clerk/clerk-expo";
 import { supabase } from "./../../Utils/SupabaseConfig";
 import Colors from "./../../Utils/Colors";
 import { TouchableOpacity } from "react-native";
-import RNPickerSelect from "react-native-picker-select";
 import Ionicons from "@expo/vector-icons/Ionicons";
 import s3bucket from "./../../Utils/S3BucketConfig";
 
@@ -22,27 +21,8 @@ export default function PreviewScreen() {
   const { user } = useUser();
   const navigation = useNavigation();
   const [caption, setCaption] = useState();
-  const [position, setPosition] = useState("");
-  const [event, setEvent] = useState("");
   const [mediaURL, setMediaURL] = useState();
   const [thumbnail, setThumbnail] = useState();
-
-  const positions = [
-    { label: "1ro", value: 1 },
-    { label: "2do", value: 2 },
-    { label: "3ro", value: 3 },
-    { label: "4to", value: 4 },
-    { label: "5to", value: 5 },
-  ];
-
-  const eventType = [
-    { label: "Municipal", value: 1 },
-    { label: "Estatal", value: 2 },
-    { label: "Regional", value: 3 },
-    { label: "Nacional", value: 4 },
-    { label: "Camp. Mundial", value: 5 },
-    { label: "Olimpico", value: 6 },
-  ];
 
   const publishHandler = async () => {
     try {
@@ -142,35 +122,11 @@ export default function PreviewScreen() {
           <TextInput
             onChangeText={(value) => setCaption(value)}
             multiline={true}
-            numberOfLines={4}
-            placeholder="Describe tu logro, el lugar del evento, la categoría, el lugar que obtuviste y lo que consideres importante."
+            numberOfLines={3}
+            placeholder="Agrega una breve descripción"
             style={[styles.txtCaption]}
           />
 
-          <View style={styles.pickerContainer}>
-            <View style={styles.picker}>
-              <RNPickerSelect
-                placeholder={{
-                  label: `Posición`,
-                  value: null,
-                }}
-                value={position}
-                onValueChange={(itemValue) => setPosition(itemValue)}
-                items={positions}
-              />
-            </View>
-            <View style={styles.picker}>
-              <RNPickerSelect
-                placeholder={{
-                  label: `Evento`,
-                  value: null,
-                }}
-                value={event}
-                onValueChange={(itemValue) => setEvent(itemValue)}
-                items={eventType}
-              />
-            </View>
-          </View>
           <TouchableOpacity onPress={publishHandler} style={styles.btnSubmit}>
             <Text style={styles.txtSubmit}>Publicar</Text>
           </TouchableOpacity>
@@ -234,22 +190,5 @@ const styles = StyleSheet.create({
     color: Colors.WHITE,
     fontFamily: "Poppins-Regular",
     fontSize: 16,
-  },
-  pickerContainer: {
-    display: "flex",
-    flexDirection: "row",
-    gap: 4,
-  },
-  picker: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "49%",
-    overflow: "hidden",
-    borderColor: Colors.GREY,
-    borderWidth: 1,
-    borderRadius: 10,
-    height: 44,
-    marginTop: 8,
   },
 });
