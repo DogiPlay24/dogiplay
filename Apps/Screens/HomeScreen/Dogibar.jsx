@@ -1,6 +1,22 @@
-import { FlatList, View, StyleSheet, Text, Image } from "react-native";
+import React from "react";
+import { FlatList, View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 
 const menu = [
+    {
+        id:-2,
+        className: 'gold',
+        callback: () => alert('elegiste oro')
+    },
+    {
+        id:-1,
+        className: 'silver',
+        callback: () => alert('elegiste plata')
+    },
+    {
+        id:0,
+        className: 'bronze',
+        callback: () => alert('elegiste bronce')
+    },
     {
         id:1,
         source: require('../../../img/dogi.png'),
@@ -33,9 +49,16 @@ export default function Dogibar() {
     return <View style={styles.wrapper}>
         <FlatList
             data={menu}
-            renderItem={({ item }) => <Image source={item.source} style={styles.menuIcon} />}
+            renderItem={({ item }) => {
+                if(item.className) {
+                    return <TouchableOpacity onPress={() =>item.callback()} >
+                    <Text style={[styles.medal, styles[item.className]]}>1</Text>
+                    <Text style={styles.note}>1</Text>
+                    </TouchableOpacity >
+                }
+                return <TouchableOpacity onPress={() =>item.callback()} ><Image source={item.source} style={styles.menuIcon} /></TouchableOpacity>
+            }}
             keyExtractor={item => item.id}
-            onPress={() => item.callback()}
         />
     </View>
 }
@@ -48,8 +71,7 @@ const styles = StyleSheet.create({
       fontSize: 32,
     },
     wrapper: {
-        backgroundColor:'rgba(0, 0, 0, 0.43)',
-        marginTop:200,
+        marginTop:150,
         flex:1,
         flexDirection: 'column',
         position: 'absolute',
@@ -63,6 +85,36 @@ const styles = StyleSheet.create({
         margin: 10,
         width: 35, 
         height: 35,
+    },
+    medal: {
+        fontSize: 15,
+        justifyContent: "center",
+        alignItems: "center",
+        height: 25,
+        width: 25,
+        borderRadius: 12,
+        color: 'white',
+        boxSizing: 'border-box',
+        overflow:'hidden',
+        textAlign:'center',
+        marginLeft:15,
+        paddingTop:5
+    },
+    gold: {
+        backgroundColor: '#FFD700'
+    },
+    silver: {
+        backgroundColor: '#C0C0C0',
+    },
+    bronze: {
+        backgroundColor: '#CD7F32'
+    },
+    note: {
+        color:'white', 
+        marginLeft:23, 
+        fontWeight:'bold', 
+        fontSize:18,
+        marginBottom:15
     }
   });
   
