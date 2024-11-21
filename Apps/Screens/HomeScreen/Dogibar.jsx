@@ -1,62 +1,76 @@
-import React from "react";
+import React, { useState } from "react";
 import { FlatList, View, StyleSheet, Text, Image, TouchableOpacity } from "react-native";
 
-const menu = [
-    {
-        id:-2,
-        className: 'gold',
-        callback: () => alert('elegiste oro')
-    },
-    {
-        id:-1,
-        className: 'silver',
-        callback: () => alert('elegiste plata')
-    },
-    {
-        id:0,
-        className: 'bronze',
-        callback: () => alert('elegiste bronce')
-    },
-    {
-        id:1,
-        source: require('../../../img/dogi.png'),
-        callback: () => alert('elegiste dogi')
-    },
-    {
-        id: 2,
-        source: require('../../../img/fuego.png'),
-        callback: () => alert('elegiste fuego')
-    },
-    {
-        id:3,
-        source: require('../../../img/halterofilia.png'),
-        callback: () => alert('elegiste halterofilia')
-    },
-    {
-        id:4 ,
-        source: require('../../../img/futbol.png'),
-        callback: () => alert('elegiste futbol Americano')
-    },
-    {
-        id:5 ,
-        source: require('../../../img/beisbol.png'),
-        callback: () => alert('elegiste beisbol')
-    }
-    
-];
-
 export default function Dogibar() {
+
+    const [menu, setMenu] = useState([
+        {
+            id: 1,
+            className: 'gold',
+            likes: 0
+        },
+        {
+            id: 2,
+            className: 'silver',
+            likes: 0
+        },
+        {
+            id: 3,
+            className: 'bronze',
+            likes: 0
+        },
+        {
+            id: 4,
+            source: require('../../../img/dogi.png'),
+            likes: 0
+        },
+        {
+            id: 5,
+            source: require('../../../img/fuego.png'),
+            likes: 0
+        },
+        {
+            id: 6,
+            source: require('../../../img/halterofilia.png'),
+            likes: 0
+        },
+        {
+            id: 7,
+            source: require('../../../img/futbol.png'),
+            likes: 0
+        },
+        {
+            id: 8,
+            source: require('../../../img/beisbol.png'),
+            likes: 0
+        }
+        
+    ]);
+    
+    const handleLike = (index) => {
+        let newState = JSON.parse(JSON.stringify(menu))
+        newState[index].likes++;
+        setMenu(newState);
+    }
+
+    const isLiked = (item) => {
+        if(item.likes === 0) return styles.disabled;
+    }
+
     return <View style={styles.wrapper}>
         <FlatList
             data={menu}
-            renderItem={({ item }) => {
+            renderItem={({ item, index }) => {
                 if(item.className) {
-                    return <TouchableOpacity onPress={() =>item.callback()} >
+                    return <TouchableOpacity onPress={() => handleLike(index)} >
                     <Text style={[styles.medal, styles[item.className]]}>1</Text>
-                    <Text style={styles.note}>1</Text>
+                    <Text style={styles.note}>{item.likes}</Text>
                     </TouchableOpacity >
                 }
-                return <TouchableOpacity onPress={() =>item.callback()} ><Image source={item.source} style={styles.menuIcon} /></TouchableOpacity>
+                return <TouchableOpacity onPress={() => handleLike(index)} >
+                    <Image source={item.source} style={[styles.menuIcon, isLiked(item)]} />
+                    <Text style={styles.note}>{item.likes}</Text>
+                    </TouchableOpacity>
             }}
             keyExtractor={item => item.id}
         />
@@ -71,7 +85,7 @@ const styles = StyleSheet.create({
       fontSize: 32,
     },
     wrapper: {
-        marginTop:150,
+        marginTop:100,
         flex:1,
         flexDirection: 'column',
         position: 'absolute',
@@ -79,7 +93,7 @@ const styles = StyleSheet.create({
         zIndex:1,
         top: 0,
         borderRadius:10,
-        right:10
+        right:10,
     },
     menuIcon: {
         margin: 10,
@@ -98,7 +112,7 @@ const styles = StyleSheet.create({
         overflow:'hidden',
         textAlign:'center',
         marginLeft:15,
-        paddingTop:5
+        paddingTop:2
     },
     gold: {
         backgroundColor: '#FFD700'
@@ -114,7 +128,9 @@ const styles = StyleSheet.create({
         marginLeft:23, 
         fontWeight:'bold', 
         fontSize:18,
-        marginBottom:15
+    },
+    disabled: {
+        filter: 'grayscale(100%)'
     }
   });
   
