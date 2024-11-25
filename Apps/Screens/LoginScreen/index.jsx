@@ -105,12 +105,12 @@ export default function LoginScreen() {
           >
             <View style={styles.main}>
               <Image source={images.logo} style={styles.icon} />
-              <View>
+              {/* <View>
                 <Text style={styles.title}>
                   Dogi
                   <Text style={styles.span}>Play</Text>
                 </Text>
-              </View>
+              </View> */}
             </View>
             <View style={styles.secondary}>
               {isPasswordReset ? (
@@ -169,8 +169,8 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   icon: {
-    width: 50,
-    height: 50,
+    width: 150,
+    height: 150,
     resizeMode: "contain",
   },
   title: {

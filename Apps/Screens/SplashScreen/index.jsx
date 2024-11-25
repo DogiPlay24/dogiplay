@@ -7,13 +7,13 @@ export default function SplashScreen() {
   return (
     <View style={styles.background}>
       <ImageBackground source={images.pattern} resizeMode="cover" style={styles.bg}>
-        <View>
+        {/* <View>
           <Text style={styles.title}>
             Dogi
             <Text style={styles.span}>Play</Text>
           </Text>
           <Text style={styles.subtitle}>Las estrellas del deporte</Text>
-        </View>
+        </View> */}
         <View style={styles.image}>
           <Image source={images.logo} style={styles.icon} />
         </View>
@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   },
   image: {
     alignItems: "center",
-    paddingTop: 200
+    // paddingTop: 200
   },
   icon: {
     height: 200,
