@@ -6,10 +6,9 @@ import LoginScreen from "./Apps/Screens/LoginScreen";
 import * as SecureStore from "expo-secure-store";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-expo";
 import { NavigationContainer } from "@react-navigation/native";
-import TabNavigation from "./Apps/Navigations/TabNavigation";
 import Toast from "react-native-toast-message";
-import ProfileForm from "./Apps/Screens/Forms/ProfileForm";
 import MainNavigation from "./Apps/Navigations/MainNavigation";
+import { Provider as PaperProvider } from "react-native-paper";
 
 export default function App() {
   const [isReady, setIsReady] = useState(false);
@@ -59,7 +58,9 @@ export default function App() {
     >
       <SignedIn>
         <NavigationContainer>
-          <MainNavigation />
+          <PaperProvider>
+            <MainNavigation />
+          </PaperProvider>
         </NavigationContainer>
       </SignedIn>
       <SignedOut>{!isReady ? <SplashScreen /> : <LoginScreen />}</SignedOut>
