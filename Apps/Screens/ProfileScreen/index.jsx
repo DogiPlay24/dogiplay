@@ -8,8 +8,8 @@ import {
   Image,
   FlatList,
 } from "react-native";
-import React, { useState } from "react";
-import { useAuth } from "@clerk/clerk-expo";
+import React, { useEffect, useState } from "react";
+import { useAuth, useUser } from "@clerk/clerk-expo";
 import Language from "../../Utils/Language";
 import { useTranslation } from "react-i18next";
 import { Appbar } from "react-native-paper";
@@ -17,17 +17,55 @@ import { MaterialIcons } from "@expo/vector-icons";
 import Colors from "../../Utils/Colors";
 import profileImg from "../../../assets/images/profile-avatar.png";
 import profileCover from "../../../assets/images/profile-cover.jpg";
+import { supabase } from "../../Utils/SupabaseConfig";
+import Toast from "react-native-toast-message";
 
 export default function ProfileScreen() {
+  const { user } = useUser();
   const { t } = useTranslation();
   const { signOut } = useAuth();
   const profileScreen = t("profileScreen", { returnObjects: true });
   const [menuVisible, setMenuVisible] = useState(false);
+  const [name, setName] = useState("");
+  const [profileImage, setProfileImage] = useState("");
+  const [bio, setBio] = useState("");
 
   const openMenu = () => setMenuVisible(true);
   const closeMenu = () => setMenuVisible(false);
 
-  const user = {
+  const loadUserProfile = async () => {
+    const { data, error } = await supabase
+      .from("Users")
+      .select("name, username, profileImage, bio")
+      .eq("email", user?.primaryEmailAddress?.emailAddress)
+      .single();
+
+    if (error) {
+      Toast.show({
+        type: "error",
+        text1: "❌ Error",
+        text2: "Error al obtener el perfil.",
+      });
+    } else {
+      setName(data.name);
+      setProfileImage(data.profileImage);
+      setBio(data.bio);
+    }
+  };
+
+  const handleEditCover = () => {
+    Toast.show({ type: "info", text1: "Editar portada" });
+  };
+
+  const handleEditProfileImage = () => {
+    Toast.show({ type: "info", text1: "Editar imagen de perfil" });
+  };
+
+  useEffect(() => {
+    loadUserProfile();
+  }, [loadUserProfile]);
+
+  const userData = {
     name: "Carlos Pérez",
     bio: "Hola 👋 soy futbolista",
     followers: "1",
@@ -41,12 +79,24 @@ export default function ProfileScreen() {
     <View style={{ flex: 1 }}>
       {/* Portada y avatar */}
       <View style={styles.coverContainer}>
-        <Image source={user.coverPhoto} style={styles.coverImage} />
+        <Image source={userData.coverPhoto} style={styles.coverImage} />
+        <TouchableOpacity
+          style={styles.coverEditIcon}
+          onPress={handleEditCover}
+        >
+          <MaterialIcons name="edit" size={24} color={Colors.WHITE} />
+        </TouchableOpacity>
         <Appbar.Header style={styles.transparentAppbar}>
           <Appbar.Action icon="cog" onPress={openMenu} />
         </Appbar.Header>
         <View style={styles.avatarContainer}>
-          <Image source={user.profilePicture} style={styles.avatar} />
+          <Image source={{ uri: profileImage }} style={styles.avatar} />
+          <TouchableOpacity
+            style={styles.avatarEditIcon}
+            onPress={handleEditProfileImage}
+          >
+            <MaterialIcons name="edit" size={20} color={Colors.WHITE} />
+          </TouchableOpacity>
         </View>
       </View>
 
@@ -54,19 +104,19 @@ export default function ProfileScreen() {
 
       {/* Información del usuario */}
       <View style={styles.userInfoContainer}>
-        <Text style={styles.userName}>{user.name}</Text>
-        <Text style={styles.userBio}>{user.bio}</Text>
+        <Text style={styles.userName}>{name}</Text>
+        <Text style={styles.userBio}>{bio}</Text>
         <View style={styles.statsContainer}>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.followers}</Text>
+            <Text style={styles.statNumber}>{userData.followers}</Text>
             <Text style={styles.statLabel}>Seguidores</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.following}</Text>
+            <Text style={styles.statNumber}>{userData.following}</Text>
             <Text style={styles.statLabel}>Seguidos</Text>
           </View>
           <View style={styles.statItem}>
-            <Text style={styles.statNumber}>{user.posts}</Text>
+            <Text style={styles.statNumber}>{userData.posts}</Text>
             <Text style={styles.statLabel}>Publicaciones</Text>
           </View>
         </View>
@@ -136,8 +186,8 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    borderWidth: 3,
-    borderColor: Colors.WHITE,
+    borderWidth: 2,
+    borderColor: Colors.GREY,
   },
   userInfoContainer: {
     marginTop: 50,
@@ -248,5 +298,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     elevation: 5,
+  },
+  coverEditIcon: {
+    position: "absolute",
+    bottom: 60,
+    right: 10,
+    backgroundColor: Colors.BLACK,
+    borderRadius: 20,
+    padding: 5,
+  },
+  avatarEditIcon: {
+    position: "absolute",
+    bottom: -5,
+    right: -5,
+    backgroundColor: Colors.BLACK,
+    borderRadius: 15,
+    padding: 5,
   },
 });
